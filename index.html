@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo</title>
+    <style>  
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1d8977, #a8e6cf, #dcedc1);
+            color: #333;
+            margin: 0;
+        }
+
+        header {
+            background-color: #00695c;
+            color: white;
+            text-align: left;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        header img {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .carousel {
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .carousel-images {
+            display: flex;
+            animation: scroll 20s linear infinite;
+        }
+
+        .carousel-images img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            margin-right: 10px;
+            border-radius: 8px;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .introduction {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #00796b;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #004d40;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #00695c;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .search-bar {
+            margin: 20px 0;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            border: 1px solid #00796b;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .search-bar button {
+            padding: 10px;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #004d40;
+        }
+
+        header h1 {
+            position: relative;
+            left: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .carousel-images img {
+                max-width: 100%;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-bar input {
+                margin-bottom: 10px;
+            }
+
+            .introduction {
+                padding: 15px;
+            }
+        }
+
+        @media (min-width: 601px) {
+            .carousel-images {
+                animation: scroll 20s linear infinite;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="imagens/weather Hurricane (Logotipo) (1).png" alt="Logotipo do Weather Hurricane">
+        <h1>Weather Hurricane</h1>
+    </header>
+    <main>
+        <section class="carousel">
+            <div class="carousel-images">
+                <img src="imagens/Ilha.jpg">
+                <img src="imagens/RJ.jpg">
+                <img src="imagens/Varzea Grande.jpg">
+                <img src="imagens/Cuiabá.jpg">
+                <img src="imagens/Curitiba.jpg">
+                <img src="imagens/new-york.jpg">
+                <img src="imagens/Orlando.jpg">
+                <img src="imagens/São Paulo.jpg">
+            </div>
+        </section>
+
+        <section class="introduction">
+            <h2>Bem-vindo ao nosso site!</h2>
+            <p>Aqui você encontra as melhores previsões do tempo para sua região, com atualizações em tempo real e dicas para se preparar para as condições climáticas.</p>
+            <div class="search-bar">
+                <input type="text" id="city-input" placeholder="Digite a cidade...">
+                <button onclick="searchWeather()">Pesquisar</button>
+            </div>
+            <a href="previsão.html" class="button">Ver Previsão do Tempo</a>
+        </section>
+
+        <section class="weather-info" id="weather-info">
+            <h3>Previsão do Tempo Atual</h3>
+            <ul id="weather-list">
+                <!-- As informações do tempo serão inseridas aqui -->
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 Previsão do Tempo. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const weatherData = [
+            { city: "São Paulo", temp: "24°C", condition: "ensolarado" },
+            { city: "Rio de Janeiro", temp: "26°C", condition: "parcialmente nublado" },
+            { city: "Brasília", temp: "22°C", condition: "chuvoso" },
+            { city: "Salvador", temp: "28°C", condition: "ensolarado" },
+            { city: "Belo Horizonte", temp: "23°C", condition: "chuvas isoladas" },
+            { city: "Curitiba", temp: "20°C", condition: "nublado" },
+            { city: "Fortaleza", temp: "30°C", condition: "ensolarado" },
+            { city: "Manaus", temp: "32°C", condition: "chuvas isoladas" },
+            { city: "Recife", temp: "27°C", condition: "parcialmente nublado" },
+            { city: "Porto Alegre", temp: "21°C", condition: "nublado" },
+            { city: "Natal", temp: "29°C", condition: "ensolarado" },
+            { city: "Teresina", temp: "33°C", condition: "ensolarado" },
+            { city: "Belém", temp: "26°C", condition: "chuvas isoladas" },
+            { city: "João Pessoa", temp: "28°C", condition: "parcialmente nublado" },
+            { city: "Maceió", temp: "27°C", condition: "ensolarado" },
+            { city: "Aracaju", temp: "29°C", condition: "ensolarado" },
+            { city: "Campo Grande", temp: "25°C", condition: "ensolarado" },
+            { city: "Cuiabá", temp: "31°C", condition: "ensolarado" },
+            { city: "Goiânia", temp: "24°C", condition: "nublado" },
+            { city: "Florianópolis", temp: "22°C", condition: "nublado" },
+            { city: "Vitória", temp: "26°C", condition: "ensolarado" },
+            { city: "Rio Branco", temp: "30°C", condition: "chuvas isoladas" },
+            { city: "Palmas", temp: "29°C", condition: "ensolarado" },
+            { city: "São Luís", temp: "27°C", condition: "parcialmente nublado" },
+            { city: "Tocantins", temp: "29°C", condition: "ensolarado" },
+            { city: "Rio de Janeiro", temp: "26°C", condition: "parcialmente nublado" },
+            { city: "Santos", temp: "25°C", condition: "ensolarado" },
+            { city: "Sorocaba", temp: "23°C", condition: "nublado" },
+        ];
+
+        function searchWeather() {
+            const input = document.getElementById('city-input').value;
+            const weatherInfo = document.getElementById('weather-info');
+            const weatherList = document.getElementById('weather-list');
+            weatherList.innerHTML = ''; // Limpa as informações anteriores
+            const cityWeather = weatherData.find(data => data.city.toLowerCase() === input.toLowerCase());
+
+            if (cityWeather) {
+                weatherInfo.style.display = 'block';
+                const li = document.createElement('li');
+                li.textContent = `${cityWeather.city}: ${cityWeather.temp}, ${cityWeather.condition}`;
+                weatherList.appendChild(li);
+            } else {
+                alert('Cidade não encontrada!');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoramento em Tempo Real - Desastres Naturais</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1d8977, #a8e6cf, #dcedc1);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        header {
+            background: #004d40;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .header-content img {
+            margin-right: 10px;
+            max-width: 80px;
+            height: auto;
+        }
+
+        nav {
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+
+        section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #4caf50;
+        }
+
+        .real-time-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .data {
+            flex: 1;
+            margin: 10px;
+            margin-bottom: 20px; /* Espaço extra entre os balões */
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+            max-width: 300px; /* Limita a largura máxima */
+        }
+
+        .map-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .botao {
+            background-color: #257828;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .botao:hover {
+            background-color: #45a049;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Consultas de mídia para responsividade */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .data {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .map-container iframe {
+                height: 300px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .map-container iframe {
+                height: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="https://www.exemplo.com">
+                <img src="imagens/weather Hurricane (Logotipo) (1).png" width="100px" height="100px" alt="Logotipo">
+            </a>
+            <h1>Monitoramento de Desastres Naturais em Tempo Real</h1>
+        </div>
+        <div>
+            <a href="#dados" class="botao">Ver Dados</a>
+            <a href="#mapa" class="botao">Ver Mapa</a>
+            <a href="index.html" class="botao">Página Inicial</a>
+        </div>
+    </header>
+
+    <section id="dados">
+        <h2>Dados em Tempo Real</h2>
+        <div class="real-time-panel">
+            <div class="data">
+                <h3>Possíveis Furacões (PF)</h3>
+                <p>Pressão Atmosférica: <span id="pressao">Informação em tempo real</span></p>
+                <p>Velocidade do Vento: <span id="vento">Informação em tempo real</span></p>
+                <p>Temperatura do Mar: <span id="tempMar">Informação em tempo real</span></p>
+                <h4>Alerta: <span id="alertaFuracao">Informação em tempo real</span></h4>
+            </div>
+            <div class="data">
+                <h3>Possíveis Tempestades Tropicais e Subtropicais (PTTS)</h3>
+                <p>Pressão Atmosférica: <span id="pressaoTempestade">Informação em tempo real</span></p>
+                <p>Velocidade do Vento: <span id="ventoTempestade">Informação em tempo real</span></p>
+                <h4>Alerta: <span id="alertaTempestade">Informação em tempo real</span></h4>
+            </div>
+            <div class="data">
+                <h3>Ciclones Tropicais (CT)</h3>
+                <p>Classificação: <span id="classificacaoCiclone">Informação em tempo real</span></p>
+                <p>Risco de Ciclones: <span id="riscoCiclone">Informação em tempo real</span></p>
+                <p>Precipitação: <span id="precipitaCiclone">Informação em tempo real</span></p>
+            </div>
+            <div class="data">
+                <h3>Ciclones Extratropicais (CE)</h3>
+                <p>Classificação: <span id="classificacaoExtratropical">Informação em tempo real</span></p>
+                <p>Risco de Ciclones: <span id="riscoExtratropical">Informação em tempo real</span></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="mapa">
+        <h2>Mapa ao Vivo - Fenômenos Meteorológicos</h2>
+        <select id="localizacao" onchange="atualizaDados()">
+            <option value="">Selecione uma Localização</option>
+            <option value="Florida">Florida, EUA</option>
+            <option value="NewYork">New York, EUA</option>
+            <option value="LosAngeles">Los Angeles, EUA</option>
+            <option value="Toronto">Toronto, Canadá</option>
+            <option value="MexicoCity">Cidade do México, México</option>
+            <option value="RioDeJaneiro">Rio de Janeiro, Brasil</option>
+            <option value="SaoPaulo">São Paulo, Brasil</option>
+            <option value="BuenosAires">Buenos Aires, Argentina</option>
+            <option value="Bogota">Bogotá, Colômbia</option>
+            <option value="Lisboa">Lisboa, Portugal</option>
+            <option value="London">Londres, Reino Unido</option>
+            <option value="Berlin">Berlim, Alemanha</option>
+            <option value="Paris">Paris, França</option>
+            <option value="Tokyo">Tóquio, Japão</option>
+            <option value="Beijing">Pequim, China</option>
+            <option value="Mumbai">Mumbai, Índia</option>
+            <option value="Seoul">Seul, Coreia do Sul</option>
+            <option value="Cairo">Cairo, Egito</option>
+            <option value="Nairobi">Nairobi, Quênia</option>
+            <option value="Johannesburg">Joanesburgo, África do Sul</option>
+            <option value="Sydney">Sydney, Austrália</option>
+            <option value="Wellington">Wellington, Nova Zelândia</option>
+        </select>
+        <div class="map-container">
+            <iframe id="mapFrame" width="100%" height="600" src="https://embed.windy.com/embed2.html?lat=27.99491&lon=-81.760254&zoom=5&level=surface&overlay=wind&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&detailLat=27.99491&detailLon=-81.760254&metricWind=default&metricTemp=default&radarRange=-1" frameborder="0"></iframe>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 - Monitoramento em Tempo Real. Todos os direitos reservados.</p>
+    </footer>
+
+    <script>
+        const dadosRegionais = {
+            Florida: {
+                pressao: "1012 hPa",
+                vento: "20 km/h",
+                tempMar: "28°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1010 hPa",
+                ventoTempestade: "25 km/h",
+                alertaTempestade: "Alerta: moderado",
+                classificacaoCiclone: "Categoria 1",
+                riscoCiclone: "Baixo",
+                precipitaCiclone: "10 mm",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            NewYork: {
+                pressao: "1008 hPa",
+                vento: "15 km/h",
+                tempMar: "22°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1006 hPa",
+                ventoTempestade: "30 km/h",
+                alertaTempestade: "Alerta: alto",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            LosAngeles: {
+                pressao: "1015 hPa",
+                vento: "10 km/h",
+                tempMar: "25°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1013 hPa",
+                ventoTempestade: "20 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Toronto: {
+                pressao: "1009 hPa",
+                vento: "12 km/h",
+                tempMar: "21°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1007 hPa",
+                ventoTempestade: "22 km/h",
+                alertaTempestade: "Alerta: moderado",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            RioDeJaneiro: {
+                pressao: "1011 hPa",
+                vento: "18 km/h",
+                tempMar: "26°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1009 hPa",
+                ventoTempestade: "24 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            SaoPaulo: {
+                pressao: "1010 hPa",
+                vento: "15 km/h",
+                tempMar: "24°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1008 hPa",
+                ventoTempestade: "20 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            MexicoCity: {
+                pressao: "1012 hPa",
+                vento: "5 km/h",
+                tempMar: "20°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1010 hPa",
+                ventoTempestade: "15 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            BuenosAires: {
+                pressao: "1005 hPa",
+                vento: "12 km/h",
+                tempMar: "22°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1003 hPa",
+                ventoTempestade: "18 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Bogota: {
+                pressao: "1010 hPa",
+                vento: "8 km/h",
+                tempMar: "18°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1008 hPa",
+                ventoTempestade: "12 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Lisboa: {
+                pressao: "1006 hPa",
+                vento: "10 km/h",
+                tempMar: "23°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1005 hPa",
+                ventoTempestade: "15 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            London: {
+                pressao: "1007 hPa",
+                vento: "12 km/h",
+                tempMar: "20°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1005 hPa",
+                ventoTempestade: "18 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Berlin: {
+                pressao: "1006 hPa",
+                vento: "10 km/h",
+                tempMar: "21°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1004 hPa",
+                ventoTempestade: "16 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Paris: {
+                pressao: "1005 hPa",
+                vento: "11 km/h",
+                tempMar: "22°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1003 hPa",
+                ventoTempestade: "14 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Tokyo: {
+                pressao: "1004 hPa",
+                vento: "15 km/h",
+                tempMar: "24°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1002 hPa",
+                ventoTempestade: "20 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Beijing: {
+                pressao: "1003 hPa",
+                vento: "10 km/h",
+                tempMar: "22°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1001 hPa",
+                ventoTempestade: "15 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Mumbai: {
+                pressao: "1006 hPa",
+                vento: "8 km/h",
+                tempMar: "28°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1004 hPa",
+                ventoTempestade: "12 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Seoul: {
+                pressao: "1005 hPa",
+                vento: "11 km/h",
+                tempMar: "27°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1003 hPa",
+                ventoTempestade: "16 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Cairo: {
+                pressao: "1002 hPa",
+                vento: "5 km/h",
+                tempMar: "30°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1000 hPa",
+                ventoTempestade: "10 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Nairobi: {
+                pressao: "1008 hPa",
+                vento: "7 km/h",
+                tempMar: "26°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1006 hPa",
+                ventoTempestade: "12 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Johannesburg: {
+                pressao: "1009 hPa",
+                vento: "6 km/h",
+                tempMar: "25°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1007 hPa",
+                ventoTempestade: "11 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Sydney: {
+                pressao: "1003 hPa",
+                vento: "14 km/h",
+                tempMar: "23°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1001 hPa",
+                ventoTempestade: "18 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            },
+            Wellington: {
+                pressao: "1004 hPa",
+                vento: "9 km/h",
+                tempMar: "21°C",
+                alertaFuracao: "Alerta de furacão: nenhum",
+                pressaoTempestade: "1002 hPa",
+                ventoTempestade: "14 km/h",
+                alertaTempestade: "Alerta: baixo",
+                classificacaoCiclone: "N/A",
+                riscoCiclone: "N/A",
+                precipitaCiclone: "N/A",
+                classificacaoExtratropical: "N/A",
+                riscoExtratropical: "N/A"
+            }
+        };
+
+        function atualizaDados() {
+            const localizacao = document.getElementById("localizacao").value;
+            const dados = dadosRegionais[localizacao];
+
+            if (dados) {
+                document.getElementById("pressao").textContent = dados.pressao;
+                document.getElementById("vento").textContent = dados.vento;
+                document.getElementById("tempMar").textContent = dados.tempMar;
+                document.getElementById("alertaFuracao").textContent = dados.alertaFuracao;
+                document.getElementById("pressaoTempestade").textContent = dados.pressaoTempestade;
+                document.getElementById("ventoTempestade").textContent = dados.ventoTempestade;
+                document.getElementById("alertaTempestade").textContent = dados.alertaTempestade;
+                document.getElementById("classificacaoCiclone").textContent = dados.classificacaoCiclone;
+                document.getElementById("riscoCiclone").textContent = dados.riscoCiclone;
+                document.getElementById("precipitaCiclone").textContent = dados.precipitaCiclone;
+                document.getElementById("classificacaoExtratropical").textContent = dados.classificacaoExtratropical;
+                document.getElementById("riscoExtratropical").textContent = dados.riscoExtratropical;
+            } else {
+                // Limpa os dados se a localização não for encontrada
+                document.getElementById("pressao").textContent = "N/A";
+                document.getElementById("vento").textContent = "N/A";
+                document.getElementById("tempMar").textContent = "N/A";
+                document.getElementById("alertaFuracao").textContent = "N/A";
+                document.getElementById("pressaoTempestade").textContent = "N/A";
+                document.getElementById("ventoTempestade").textContent = "N/A";
+                document.getElementById("alertaTempestade").textContent = "N/A";
+                document.getElementById("classificacaoCiclone").textContent = "N/A";
+                document.getElementById("riscoCiclone").textContent = "N/A";
+                document.getElementById("precipitaCiclone").textContent = "N/A";
+                document.getElementById("classificacaoExtratropical").textContent = "N/A";
+                document.getElementById("riscoExtratropical").textContent = "N/A";
+            }
+        }
+    </script>
+</body>
+</html>
