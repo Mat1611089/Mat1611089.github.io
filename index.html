@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão do Tempo</title>
     <style>  
-               body {
+        body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #1d8977, #a8e6cf, #dcedc1);
             color: #333;
@@ -204,7 +204,8 @@
     </footer>
 
    <script>
-        const apiKey = "SUA_CHAVE_DE_API"; // Coloque sua chave da OpenWeatherMap aqui
+        const API_HOST = 'open-weather13.p.rapidapi.com'; // Host da API
+        const API_KEY = 'YOUR_API_KEY'; // Substitua pela sua chave de API
 
         async function searchWeather() {
             const input = document.getElementById('city-input').value;
@@ -213,28 +214,29 @@
             weatherList.innerHTML = ''; // Limpa as informações anteriores
 
             try {
-                // Faz a requisição para a API OpenWeatherMap
-                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${input}&appid=${apiKey}&units=metric&lang=pt_br`);
-                const data = await response.json();
+                const response = await fetch(`https://${API_HOST}/city/${input}/EN`, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-host': API_HOST,
+                        'x-rapidapi-key': API_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                if (data.cod === 200) { // Verifica se a cidade foi encontrada
-                    weatherInfo.style.display = 'block';
-                    const temp = data.main.temp;
-                    const condition = data.weather[0].description;
-
-                    // Cria e exibe as informações
-                    const li = document.createElement('li');
-                    li.textContent = `${input}: ${temp}°C, ${condition}`;
-                    weatherList.appendChild(li);
-                } else {
-                    alert('Cidade não encontrada!');
+                if (!response.ok) {
+                    throw new Error('Cidade não encontrada!');
                 }
+
+                const cityWeather = await response.json();
+                weatherInfo.style.display = 'block';
+
+                const li = document.createElement('li');
+                li.textContent = `${cityWeather.name}: ${cityWeather.main.temp}°C, ${cityWeather.weather[0].description}`;
+                weatherList.appendChild(li);
             } catch (error) {
-                console.error('Erro ao buscar dados do tempo:', error);
-                alert('Erro ao buscar dados do tempo. Tente novamente mais tarde.');
+                alert(error.message);
             }
         }
     </script>
 </body>
 </html>
-
