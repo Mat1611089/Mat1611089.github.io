@@ -161,6 +161,19 @@
                 animation: scroll 20s linear infinite;
             }
         }
+
+        /* Cores para as temperaturas */
+        .temp-below-25 {
+            color: blue; /* Azul para temperaturas abaixo de 25 graus */
+        }
+
+        .temp-25-to-30 {
+            color: green; /* Verde para temperaturas entre 25 e 30 graus */
+        }
+
+        .temp-above-30 {
+            color: red; /* Vermelho para temperaturas acima de 30 graus */
+        }
     </style>
 </head>
 <body>
@@ -230,22 +243,73 @@
             { city: "Palmas", temp: "29°C", condition: "ensolarado" },
             { city: "São Luís", temp: "27°C", condition: "parcialmente nublado" },
             { city: "Tocantins", temp: "29°C", condition: "ensolarado" },
-            { city: "Rio de Janeiro", temp: "26°C", condition: "parcialmente nublado" },
             { city: "Santos", temp: "25°C", condition: "ensolarado" },
             { city: "Sorocaba", temp: "23°C", condition: "nublado" },
+            // Cidades adicionais
+            { city: "Uberlândia", temp: "24°C", condition: "nublado" },
+            { city: "São José dos Campos", temp: "22°C", condition: "nublado" },
+            { city: "Bauru", temp: "25°C", condition: "nublado" },
+            { city: "São Vicente", temp: "26°C", condition: "ensolarado" },
+            { city: "Londrina", temp: "24°C", condition: "nublado" },
+            { city: "Campinas", temp: "28°C", condition: "ensolarado" },
+            { city: "Ribeirão Preto", temp: "27°C", condition: "parcialmente nublado" },
+            { city: "Caxias do Sul", temp: "20°C", condition: "chuvas isoladas" },
+            { city: "Joinville", temp: "22°C", condition: "nublado" },
+            { city: "Maringá", temp: "23°C", condition: "chuvas isoladas" },
+            { city: "Blumenau", temp: "21°C", condition: "parcialmente nublado" },
+            { city: "Guarujá", temp: "27°C", condition: "ensolarado" },
+            { city: "Taboão da Serra", temp: "25°C", condition: "nublado" },
+            { city: "Barueri", temp: "26°C", condition: "parcialmente nublado" },
+            { city: "Diadema", temp: "24°C", condition: "nublado" },
+            // Cidades da Europa
+            { city: "Londres", temp: "12°C", condition: "nublado" },
+            { city: "Paris", temp: "14°C", condition: "chuvas isoladas" },
+            { city: "Berlim", temp: "10°C", condition: "parcialmente nublado" },
+            { city: "Madri", temp: "18°C", condition: "ensolarado" },
+            { city: "Roma", temp: "16°C", condition: "parcialmente nublado" },
+            { city: "Lisboa", temp: "19°C", condition: "ensolarado" },
+            // Cidades dos EUA
+            { city: "Nova Iorque", temp: "15°C", condition: "nublado" },
+            { city: "Los Angeles", temp: "22°C", condition: "ensolarado" },
+            { city: "Chicago", temp: "10°C", condition: "chuvas isoladas" },
+            { city: "Houston", temp: "28°C", condition: "parcialmente nublado" },
+            { city: "Phoenix", temp: "34°C", condition: "ensolarado" },
+            { city: "Filadélfia", temp: "18°C", condition: "nublado" },
+            { city: "San Antonio", temp: "30°C", condition: "ensolarado" },
+            { city: "San Diego", temp: "24°C", condition: "ensolarado" },
+            { city: "Dallas", temp: "26°C", condition: "parcialmente nublado" },
+            { city: "San José", temp: "21°C", condition: "ensolarado" },
+            { city: "Austin", temp: "27°C", condition: "nublado" },
+            { city: "San Francisco", temp: "16°C", condition: "nublado" },
         ];
 
-        function searchWeather() {
+        async function searchWeather() {
             const input = document.getElementById('city-input').value;
             const weatherInfo = document.getElementById('weather-info');
             const weatherList = document.getElementById('weather-list');
             weatherList.innerHTML = ''; // Limpa as informações anteriores
-            const cityWeather = weatherData.find(data => data.city.toLowerCase() === input.toLowerCase());
+
+            const cityWeather = weatherData.find(city => city.city.toLowerCase() === input.toLowerCase());
 
             if (cityWeather) {
                 weatherInfo.style.display = 'block';
+
                 const li = document.createElement('li');
-                li.textContent = ${cityWeather.city}: ${cityWeather.temp}, ${cityWeather.condition};
+                const temp = parseInt(cityWeather.temp); // Extrai a temperatura como número
+
+                let tempClass;
+
+                // Define a classe com base na temperatura
+                if (temp < 25) {
+                    tempClass = 'temp-below-25';
+                } else if (temp >= 25 && temp <= 30) {
+                    tempClass = 'temp-25-to-30';
+                } else {
+                    tempClass = 'temp-above-30';
+                }
+
+                li.className = tempClass;
+                li.textContent = `${cityWeather.city}: ${cityWeather.temp}, ${cityWeather.condition}`;
                 weatherList.appendChild(li);
             } else {
                 alert('Cidade não encontrada!');
@@ -253,4 +317,5 @@
         }
     </script>
 </body>
-</html> 
+</html>
+
