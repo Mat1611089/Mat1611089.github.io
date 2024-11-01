@@ -204,6 +204,11 @@
     </footer>
 
    <script>
+        // Função para remover acentos de uma string
+        function removeAccents(text) {
+            return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
         const weatherData = [
             { city: "São Paulo", temp: "24°C", condition: "ensolarado" },
             { city: "Rio de Janeiro", temp: "26°C", condition: "parcialmente nublado" },
@@ -230,27 +235,17 @@
             { city: "Palmas", temp: "29°C", condition: "ensolarado" },
             { city: "São Luís", temp: "27°C", condition: "parcialmente nublado" },
             { city: "Tocantins", temp: "29°C", condition: "ensolarado" },
-            { city: "Rio de Janeiro", temp: "26°C", condition: "parcialmente nublado" },
             { city: "Santos", temp: "25°C", condition: "ensolarado" },
             { city: "Sorocaba", temp: "23°C", condition: "nublado" },
         ];
 
         function searchWeather() {
             const input = document.getElementById('city-input').value;
+            const normalizedInput = removeAccents(input.toLowerCase());
             const weatherInfo = document.getElementById('weather-info');
             const weatherList = document.getElementById('weather-list');
             weatherList.innerHTML = ''; // Limpa as informações anteriores
-            const cityWeather = weatherData.find(data => data.city.toLowerCase() === input.toLowerCase());
 
-            if (cityWeather) {
-                weatherInfo.style.display = 'block';
-                const li = document.createElement('li');
-                li.textContent = `${cityWeather.city}: ${cityWeather.temp}, ${cityWeather.condition}`;
-                weatherList.appendChild(li);
-            } else {
-                alert('Cidade não encontrada!');
-            }
-        }
-    </script>
-</body>
-</html>
+            // Procura cidade removendo acentos dos dados também
+            const cityWeather = weatherData.find(data => 
+                removeAccents(data.city.toLowerCase()) === normalizedInput
