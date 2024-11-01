@@ -247,9 +247,7 @@
             { city: "Sorocaba", temp: "23°C", condition: "nublado" },
             // Cidades adicionais
             { city: "Uberlândia", temp: "24°C", condition: "nublado" },
-            { city: "São José dos Campos", temp: "22°C", condition: "nublado" },
-            { city: "Bauru", temp: "25°C", condition: "nublado" },
-            { city: "São Vicente", temp: "26°C", condition: "ensolarado" },
+            { city: "São José dos Campos", temp: "26°C", condition: "ensolarado" },
             { city: "Londrina", temp: "24°C", condition: "nublado" },
             { city: "Campinas", temp: "28°C", condition: "ensolarado" },
             { city: "Ribeirão Preto", temp: "27°C", condition: "parcialmente nublado" },
@@ -283,13 +281,25 @@
             { city: "San Francisco", temp: "16°C", condition: "nublado" },
         ];
 
+        // Função para remover acentos de uma string
+        function removeAccents(str) {
+            return str.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        }
+
         async function searchWeather() {
             const input = document.getElementById('city-input').value;
             const weatherInfo = document.getElementById('weather-info');
             const weatherList = document.getElementById('weather-list');
             weatherList.innerHTML = ''; // Limpa as informações anteriores
 
-            const cityWeather = weatherData.find(city => city.city.toLowerCase() === input.toLowerCase());
+            // Normaliza a entrada para comparação sem acentos
+            const normalizedInput = removeAccents(input).toLowerCase();
+
+            // Busca a cidade na lista original
+            const cityWeather = weatherData.find(city => {
+                return city.city.toLowerCase() === normalizedInput || 
+                       removeAccents(city.city).toLowerCase() === normalizedInput;
+            });
 
             if (cityWeather) {
                 weatherInfo.style.display = 'block';
@@ -318,4 +328,3 @@
     </script>
 </body>
 </html>
-
