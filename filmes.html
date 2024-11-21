@@ -53,7 +53,8 @@
         .filme {
             margin-bottom: 30px;
             display: flex;
-            align-items: center; /* Para alinhar imagem e texto ao centro */
+            flex-wrap: wrap; /* Permite que os itens se movam para a próxima linha se necessário */
+            align-items: flex-start; /* Para alinhar imagem e texto ao topo */
             justify-content: space-between; /* Para distribuir espaço entre o texto e a imagem */
         }
         .filme h3 {
@@ -78,6 +79,45 @@
         }
         footer p {
             margin: 0;
+        }
+
+        /* Media Queries para tornar o layout responsivo */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem; /* Ajusta o tamanho do título para telas menores */
+            }
+            nav ul li {
+                margin-right: 10px; /* Reduz o espaçamento entre os itens de navegação */
+            }
+            .filme p {
+                width: 100%; /* Faz o texto ocupar toda a largura em telas menores */
+                margin-bottom: 15px; /* Adiciona um pouco de espaço entre o texto e a imagem */
+            }
+            .filme img {
+                width: 100%; /* Faz as imagens ocuparem toda a largura disponível */
+                max-width: none; /* Remove a largura máxima das imagens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem; /* Diminui o tamanho da fonte ainda mais em telas pequenas */
+            }
+            nav ul li {
+                margin-right: 5px; /* Reduz o espaçamento ainda mais em telas muito pequenas */
+            }
+            .filme {
+                flex-direction: column; /* Organiza os elementos em coluna em telas pequenas */
+                align-items: center; /* Centraliza a imagem e o texto */
+            }
+            .filme p {
+                width: 100%; /* Faz o texto ocupar toda a largura disponível */
+                font-size: 1rem; /* Diminui o tamanho da fonte do texto */
+            }
+            .filme img {
+                width: 100%; /* Ajusta a largura das imagens para 100% */
+                max-width: 300px; /* Limita a largura das imagens em telas pequenas */
+            }
         }
     </style>
 </head>
@@ -133,3 +173,4 @@
     </footer>
 </body>
 </html>
+
