@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardiões da Galáxia - Galeria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a1f94, #000000, #003366);
+            color: #fff;
+            margin: 0;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #ffcc00;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            background-color: #ffcc00;
+            color: #800080; /* Texto roxo */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #800080; /* Cor de fundo roxa */
+            color: #ffcc00; /* Texto amarelo */
+        }
+        .galeria {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 20px;
+        }
+        .imagem {
+            width: 250px;
+            height: 400px;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .descricao {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.85); /* Opacidade aumentada para 85% */
+            color: #800080; /* Texto roxo */
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            max-width: 80%;
+        }
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 20px;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Guardiões da Galáxia</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="filmes.html">Filmes</a></li>
+                <li><a href="galeria.html">Galeria</a></li>
+                <li><a href="personagens.html">Personagens</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="galeria">
+        <div class="imagem">
+            <img src="imagens/groot.jpg" alt="Groot">
+            <div class="descricao">Groot: Um ser vegetal com habilidades regenerativas. Fiel e poderoso, ele é um grande amigo dos Guardiões.</div>
+        </div>
+        <div class="imagem">
+            <img src="imagens/rocket.png" alt="Rocket Raccoon">
+            <div class="descricao">Rocket Raccoon: Um guaxinim geneticamente modificado, mestre em armas e engenhocas, com um passado traumático.</div>
+        </div>
+        <div class="imagem">
+            <img src="imagens/Star-Lord_AIW_Profile.webp" alt="Star-Lord">
+            <div class="descricao">Star-Lord: Peter Quill, líder dos Guardiões. Com um espírito aventureiro e humor irreverente, ele busca seu destino.</div>
+        </div>
+        <div class="imagem">
+            <img src="imagens/Gamora.jpg" alt="Gamora">
+            <div class="descricao">Gamora: A última de sua espécie, uma guerreira habilidosa e ex-assassina, buscando redenção por seus crimes passados.</div>
+        </div>
+        <div class="imagem">
+            <img src="imagens/Drax.jpg" alt="Drax">
+            <div class="descricao">Drax: Vingativo e determinado, Drax busca destruir o responsável pela morte de sua família.</div>
+        </div>
+        <div class="imagem">
+            <img src="imagens/Mantis.jpg" alt="Mantis">
+            <div class="descricao">Mantis: Uma empata que pode sentir e manipular as emoções dos outros, ela é uma aliada leal dos Guardiões.</div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Guardiões da Galáxia - Todos os direitos reservados</p>
+    </footer>
+</body>
+</html>
+
+
+

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guardiões da Galáxia - Galeria</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a1f94, #000000, #003366);
+            color: #fff;
+            margin: 0;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            text-align: center;
+        }
+        header h1 {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            color: #ffcc00;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            background-color: #ffcc00;
+            color: #800080; /* Texto roxo */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        nav ul li a:hover {
+            background-color: #800080; /* Cor de fundo roxa */
+            color: #ffcc00; /* Texto amarelo */
+        }
+
+        /* Estilos do carrossel */
+        .carousel {
+            width: 80%;
+            max-width: 1000px;
+            overflow: hidden;
+            position: relative;
+            margin: 30px auto;
+        }
+
+        .carousel-images {
+            display: flex;
+            transition: transform 1s ease-in-out;
+            gap: 10px; /* Espaçamento entre as imagens */
+        }
+
+        .carousel-images img {
+            width: 200px; /* Definindo a largura das imagens para 200px */
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Adiciona o efeito de transição suave */
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            text-align: center;
+            padding: 20px;
+        }
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Guardiões da Galáxia</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="filmes.html">Filmes</a></li>
+                <li><a href="galeria.html">Galeria</a></li>
+                <li><a href="personagens.html">Personagens</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Seção do Carrossel -->
+    <section class="carousel">
+        <div class="carousel-images">
+            <!-- Imagens dos Guardiões da Galáxia -->
+            <img src="imagens/Galeria 1.jpg" alt="Groot">
+            <img src="imagens/galeria 2.jpg" alt="Rocket Raccoon">
+            <img src="imagens/galeria 3.jpg" alt="Star-Lord">
+            <img src="imagens/Fundo.jpeg" alt="Guardiões">
+            <img src="imagens/fundo 2.jpeg" alt="Guardiões">
+            <img src="imagens/fundo3.jpg" alt="Guardiões">
+            <img src="imagens/Galeria 1.jpg" alt="Groot">
+            <img src="imagens/galeria 2.jpg" alt="Rocket Raccoon">
+            <img src="imagens/galeria 3.jpg" alt="Star-Lord">
+            <img src="imagens/Fundo.jpeg" alt="Guardiões">
+            <img src="imagens/fundo 2.jpeg" alt="Guardiões">
+            <img src="imagens/fundo3.jpg" alt="Guardiões">
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Guardiões da Galáxia - Todos os direitos reservados</p>
+    </footer>
+
+    <script>
+        let currentIndex = 0;
+        const carousel = document.querySelector('.carousel-images');
+        const totalImages = carousel.children.length;
+
+        // Função para mover o carrossel
+        function moveCarousel() {
+            currentIndex = (currentIndex + 1) % totalImages;
+            carousel.style.transform = `translateX(-${currentIndex * (200 + 10)}px)`; // 200px de largura das imagens + 10px de espaçamento
+        }
+
+        // Iniciar rotação automática
+        setInterval(moveCarousel, 3000); // Muda a cada 3 segundos
+    </script>
+
+</body>
+</html>
