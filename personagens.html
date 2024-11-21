@@ -11,23 +11,28 @@
             color: #fff;
             margin: 0;
         }
+
         header {
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             text-align: center;
         }
+
         header h1 {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             color: #ffcc00;
         }
+
         nav ul {
             list-style: none;
             padding: 0;
         }
+
         nav ul li {
             display: inline;
             margin-right: 20px;
         }
+
         nav ul li a {
             background-color: #ffcc00;
             color: #800080; /* Texto roxo */
@@ -37,10 +42,12 @@
             font-size: 1.1rem;
             transition: background-color 0.3s, color 0.3s;
         }
+
         nav ul li a:hover {
             background-color: #800080; /* Cor de fundo roxa */
             color: #ffcc00; /* Texto amarelo */
         }
+
         .galeria {
             display: flex;
             flex-wrap: wrap;
@@ -48,6 +55,7 @@
             gap: 30px;
             padding: 20px;
         }
+
         .imagem {
             width: 250px;
             height: 400px;
@@ -56,11 +64,13 @@
             overflow: hidden;
             position: relative;
         }
+
         .imagem img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
         .descricao {
             position: absolute;
             bottom: 10px;
@@ -72,13 +82,48 @@
             font-size: 1rem;
             max-width: 80%;
         }
+
         footer {
             background: rgba(0, 0, 0, 0.7);
             text-align: center;
             padding: 20px;
         }
+
         footer p {
             margin: 0;
+        }
+
+        /* Media Queries para telas pequenas */
+        @media (max-width: 768px) {
+            .imagem {
+                width: 200px;
+                height: 350px;
+            }
+
+            .galeria {
+                gap: 20px;
+            }
+
+            .descricao {
+                font-size: 0.9rem;
+                max-width: 70%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .imagem {
+                width: 100%;
+                height: 300px;
+            }
+
+            .galeria {
+                gap: 15px;
+            }
+
+            .descricao {
+                font-size: 0.8rem;
+                max-width: 90%;
+            }
         }
     </style>
 </head>
