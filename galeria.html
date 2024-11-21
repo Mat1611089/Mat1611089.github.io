@@ -72,6 +72,37 @@
         footer p {
             margin: 0;
         }
+
+        /* Tornando o layout responsivo */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem; /* Ajusta o tamanho da fonte para telas menores */
+            }
+            nav ul li {
+                margin-right: 10px; /* Reduz o espaçamento entre os itens de navegação */
+            }
+            .carousel {
+                width: 90%; /* Ajusta a largura do carrossel em telas menores */
+            }
+            .carousel-images img {
+                width: 150px; /* Ajusta a largura das imagens do carrossel */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem; /* Diminui o tamanho da fonte ainda mais em telas muito pequenas */
+            }
+            nav ul li {
+                margin-right: 5px; /* Reduz ainda mais o espaçamento */
+            }
+            .carousel {
+                width: 100%; /* O carrossel ocupa toda a largura da tela */
+            }
+            .carousel-images img {
+                width: 120px; /* Ajusta as imagens para um tamanho adequado em telas muito pequenas */
+            }
+        }
     </style>
 </head>
 <body>
@@ -91,18 +122,18 @@
     <section class="carousel">
         <div class="carousel-images">
             <!-- Imagens dos Guardiões da Galáxia -->
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
+            <img src="imagens/Galeria 1.jpg" alt="Groot">
+            <img src="imagens/galeria 2.jpg" alt="Rocket Raccoon">
+            <img src="imagens/galeria 3.jpg" alt="Star-Lord">
+            <img src="imagens/Fundo.jpeg" alt="Guardiões">
+            <img src="imagens/fundo 2.jpeg" alt="Guardiões">
+            <img src="imagens/fundo3.jpg" alt="Guardiões">
+            <img src="imagens/Galeria 1.jpg" alt="Groot">
+            <img src="imagens/galeria 2.jpg" alt="Rocket Raccoon">
+            <img src="imagens/galeria 3.jpg" alt="Star-Lord">
+            <img src="imagens/Fundo.jpeg" alt="Guardiões">
+            <img src="imagens/fundo 2.jpeg" alt="Guardiões">
+            <img src="imagens/fundo3.jpg" alt="Guardiões">
         </div>
     </section>
 
@@ -127,3 +158,4 @@
 
 </body>
 </html>
+
