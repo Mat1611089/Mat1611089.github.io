@@ -27,26 +27,31 @@
         nav ul {
             list-style-type: none;
             padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap; /* Permite que os botões quebrem em linhas */
+            gap: 10px; /* Espaçamento entre os botões */
         }
 
         nav ul li {
-            display: inline;
-            margin-right: 20px;
+            margin: 0;
         }
 
         nav ul li a {
             background-color: #ffcc00;
-            color: #800080; /* Cor roxa para o texto */
+            color: #800080;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
             font-size: 1.1rem;
             transition: background-color 0.3s, color 0.3s;
+            display: inline-block; /* Garante que o botão se comporte como bloco */
         }
 
         nav ul li a:hover {
-            background-color: #800080; /* Cor roxa para o fundo */
-            color: #ffcc00; /* Cor amarela para o texto */
+            background-color: #800080;
+            color: #ffcc00;
         }
 
         main {
@@ -89,6 +94,25 @@
         footer p {
             margin: 0;
         }
+
+        /* Media Queries para telas menores */
+        @media (max-width: 768px) {
+            nav ul li a {
+                font-size: 1rem; /* Reduz o tamanho da fonte nos botões */
+                padding: 8px 16px; /* Ajusta o espaçamento interno */
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            nav ul li a {
+                font-size: 0.9rem; /* Diminui ainda mais a fonte nos botões */
+                padding: 6px 12px; /* Reduz o tamanho geral */
+            }
+        }
     </style>
 </head>
 <body>
@@ -126,4 +150,3 @@
     </footer>
 </body>
 </html>
-
