@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guardiões da Galáxia - Galeria</title>
+    <title>Guardiões da Galáxia - Filmes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,96 +11,134 @@
             color: #fff;
             margin: 0;
         }
+
         header {
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             text-align: center;
         }
+
         header h1 {
             font-family: 'Comic Sans MS', cursive, sans-serif;
             color: #ffcc00;
         }
+
         nav ul {
             list-style: none;
             padding: 0;
-        }
-        nav ul li {
-            display: inline;
-            margin-right: 20px;
-        }
-        nav ul li a {
-            background-color: #ffcc00;
-            color: #800080; /* Texto roxo */
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        nav ul li a:hover {
-            background-color: #800080; /* Cor de fundo roxa */
-            color: #ffcc00; /* Texto amarelo */
-        }
-
-        /* Estilos do carrossel */
-        .carousel {
-            width: 80%;
-            max-width: 1000px;
-            overflow: hidden;
-            position: relative;
-            margin: 30px auto;
-        }
-
-        .carousel-images {
+            margin: 0;
             display: flex;
-            transition: transform 1s ease-in-out;
-            gap: 10px; /* Espaçamento entre as imagens */
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .carousel-images img {
-            width: 200px; /* Definindo a largura das imagens para 200px */
+        nav ul li {
+            margin: 0;
+        }
+
+        nav ul li a {
+            color: #800080;
+            background-color: #ffcc00;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, color 0.3s;
+            display: inline-block;
+        }
+
+        nav ul li a:hover {
+            background-color: #800080;
+            color: #ffcc00;
+        }
+
+        .filmes {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.45);
+            border-radius: 15px;
+            margin: 20px;
+        }
+
+        .filme {
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .filme h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .filme p {
+            font-size: 1.2rem;
+            width: 60%;
+        }
+
+        .filme img {
+            width: 100%;
+            max-width: 400px;
             height: auto;
-            object-fit: cover;
+            border-radius: 10px;
         }
 
-        /* Adiciona o efeito de transição suave */
         footer {
             background: rgba(0, 0, 0, 0.7);
             text-align: center;
             padding: 20px;
         }
+
         footer p {
             margin: 0;
         }
 
-        /* Tornando o layout responsivo */
         @media (max-width: 768px) {
             header h1 {
-                font-size: 2rem; /* Ajusta o tamanho da fonte para telas menores */
+                font-size: 1.8rem;
             }
-            nav ul li {
-                margin-right: 10px; /* Reduz o espaçamento entre os itens de navegação */
+
+            nav ul li a {
+                font-size: 1rem;
+                padding: 8px 16px;
             }
-            .carousel {
-                width: 90%; /* Ajusta a largura do carrossel em telas menores */
+
+            .filme p {
+                width: 100%;
+                margin-bottom: 15px;
             }
-            .carousel-images img {
-                width: 150px; /* Ajusta a largura das imagens do carrossel */
+
+            .filme img {
+                width: 100%;
+                max-width: none;
             }
         }
 
         @media (max-width: 480px) {
             header h1 {
-                font-size: 1.5rem; /* Diminui o tamanho da fonte ainda mais em telas muito pequenas */
+                font-size: 1.5rem;
             }
-            nav ul li {
-                margin-right: 5px; /* Reduz ainda mais o espaçamento */
+
+            nav ul li a {
+                font-size: 0.9rem;
+                padding: 6px 12px;
             }
-            .carousel {
-                width: 100%; /* O carrossel ocupa toda a largura da tela */
+
+            .filme {
+                flex-direction: column;
+                align-items: center;
             }
-            .carousel-images img {
-                width: 120px; /* Ajusta as imagens para um tamanho adequado em telas muito pequenas */
+
+            .filme p {
+                width: 100%;
+                font-size: 1rem;
+            }
+
+            .filme img {
+                width: 100%;
+                max-width: 300px;
             }
         }
     </style>
@@ -118,44 +156,44 @@
         </nav>
     </header>
 
-    <!-- Seção do Carrossel -->
-    <section class="carousel">
-        <div class="carousel-images">
-            <!-- Imagens dos Guardiões da Galáxia -->
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
+    <div class="filmes">
+        <div class="filme">
+            <div>
+                <h3>Guardiões da Galáxia (2014)</h3>
+                <p>A história segue um grupo improvável de heróis intergalácticos que se unem para salvar o universo.
+                <br><br>
+                O protagonista, Peter Quill, é um terráqueo que, após ser sequestrado quando criança, cresce como um ladrão espacial. Ele rouba uma esfera misteriosa que acaba atraindo a atenção de vários vilões, incluindo o poderosíssimo Ronan, o Acusador, que deseja usá-la para destruir planetas.
+                <br><br>
+                Para escapar da perseguição de Ronan e seus aliados, Quill forma uma aliança com quatro outros indivíduos: Gamora, uma assassina treinada e filha adotiva de Thanos; Drax, um guerreiro em busca de vingança; Rocket, um guaxinim geneticamente modificado e mestre da tecnologia; e Groot, uma árvore humanoide com um único poder de regeneração.
+                <br><br>
+                Juntos, eles formam os Guardiões da Galáxia e, apesar de suas diferenças, começam a trabalhar em equipe para impedir Ronan e salvar o universo. O filme mistura ação, humor e emoção, e também conta com uma trilha sonora nostálgica, repleta de músicas dos anos 70 e 80.</p>
+            </div>
+            <img src="Capa 1.jpg" alt="Guardiões da Galáxia 2014">
         </div>
-    </section>
+        <div class="filme">
+            <div>
+                <h3>Guardiões da Galáxia Vol. 2 (2017)</h3>
+                <p>Segue os heróis intergalácticos após os eventos do primeiro filme. A história explora mais profundamente os personagens e suas relações pessoais, especialmente o vínculo de Peter Quill com seu pai, Ego, que se revela ser uma entidade cósmica poderosa.
+                <br><br>
+                Ego se junta aos Guardiões, mas logo é revelado que ele tem intenções sombrias, envolvendo a destruição de planetas e a criação de uma nova ordem universal. Enquanto isso, a relação entre Rocket e Groot, Drax e Mantis, e o relacionamento crescente entre Gamora e sua irmã Nebula, que busca vingança, também são explorados.
+                <br><br>
+                Ao longo do filme, os Guardiões enfrentam traumas pessoais, batalhas cósmicas e a lealdade do grupo é posta à prova. O filme mistura ação, humor e emoção, e explora temas como paternidade, família e redenção, com uma trilha sonora que faz referência aos anos 70 e 80. No final, os Guardiões conseguem derrotar Ego e salvam o universo, enquanto reforçam os laços que os tornam uma verdadeira família.</p>
+            </div>
+            <img src="Capa 2.jpg" alt="Guardiões da Galáxia Vol. 2">
+        </div>
+        <div class="filme">
+            <div>
+                <h3>Guardiões da Galáxia Vol. 3 (2023)</h3>
+                <p>*Guardiões da Galáxia Vol. 3* conclui a jornada dos heróis espaciais, focando na origem trágica de Rocket Raccoon, que sofreu experimentos cruéis nas mãos do Alto Evolucionário. Quando Rocket é ferido, os Guardiões se unem para salvá-lo, enfrentando o império do cientista maluco.
+                <br><br>
+                O filme explora temas de amizade, sacrifício e redenção, enquanto os personagens enfrentam seus próprios conflitos emocionais. A relação entre Peter Quill e Gamora também é aprofundada, com a versão alternativa de Gamora. A trama culmina na derrota do Alto Evolucionário, encerrando a história com uma forte carga emocional e celebração da família dos Guardiões.</p>
+            </div>
+            <img src="kkkk.webp" alt="Guardiões da Galáxia Vol. 3">
+        </div>
+    </div>
 
     <footer>
         <p>&copy; 2024 Guardiões da Galáxia - Todos os direitos reservados</p>
     </footer>
-
-    <script>
-        let currentIndex = 0;
-        const carousel = document.querySelector('.carousel-images');
-        const totalImages = carousel.children.length;
-
-        // Função para mover o carrossel
-        function moveCarousel() {
-            currentIndex = (currentIndex + 1) % totalImages;
-            carousel.style.transform = `translateX(-${currentIndex * (200 + 10)}px)`; // 200px de largura das imagens + 10px de espaçamento
-        }
-
-        // Iniciar rotação automática
-        setInterval(moveCarousel, 3000); // Muda a cada 3 segundos
-    </script>
-
 </body>
 </html>
-
