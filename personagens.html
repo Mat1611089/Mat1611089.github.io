@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guardiões da Galáxia - Galeria</title>
     <style>
+        /* Declaração da fonte personalizada */
+        @font-face {
+            font-family: 'GuardiansFont';
+            src: url('fonts/sf-distant-galaxy.woff') format('woff');
+        }
+
         body {
             font-family: Arial, sans-serif;
             /* Gradiente animado com movimento */
@@ -35,7 +41,7 @@
         }
 
         header h1 {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'GuardiansFont', 'Comic Sans MS', cursive, sans-serif;
             color: #ffcc00;
         }
 
@@ -93,6 +99,7 @@
             object-fit: cover;
         }
 
+        /* Formatação do texto com primeira letra maiúscula e o restante minúsculo */
         .descricao {
             position: absolute;
             bottom: 10px;
@@ -103,6 +110,11 @@
             border-radius: 5px;
             font-size: 1rem;
             max-width: 80%;
+            text-transform: lowercase;
+        }
+
+        .descricao::first-letter {
+            text-transform: uppercase; /* Primeira letra maiúscula */
         }
 
         footer {
@@ -217,4 +229,3 @@
     </footer>
 </body>
 </html>
-
