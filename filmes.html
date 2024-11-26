@@ -82,7 +82,6 @@
         .filme {
             margin-bottom: 30px;
             display: flex;
-            flex-wrap: wrap;
             align-items: flex-start;
             justify-content: space-between;
         }
@@ -94,7 +93,8 @@
 
         .filme p {
             font-size: 1.2rem;
-            width: 60%;
+            flex: 1; /* Faz o texto ocupar o espaço restante */
+            margin-right: 20px; /* Espaço entre o texto e a imagem */
         }
 
         .filme img {
@@ -115,13 +115,19 @@
         }
 
         @media (max-width: 768px) {
+            .filme {
+                flex-direction: column; /* Empilha texto e imagem em telas menores */
+                align-items: center;
+            }
+
             .filme p {
-                width: 100%;
+                margin-right: 0; /* Remove margem lateral em telas pequenas */
                 margin-bottom: 15px;
             }
 
             .filme img {
                 width: 100%;
+                max-width: none;
             }
         }
     </style>
