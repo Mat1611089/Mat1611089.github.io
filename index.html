@@ -17,8 +17,24 @@
             font-family: 'GuardiansFont', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #6a1f94, #000000, #003366);
+            /* Gradiente animado */
+            background: linear-gradient(135deg, #6a1f94, #000000, #b300d9);
+            background-size: 300% 300%;
+            animation: gradientMove 10s ease infinite;
             color: #fff;
+        }
+
+        /* Animação do gradiente */
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         header {
