@@ -5,19 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guardiões da Galáxia - Filmes</title>
     <style>
-        /* Declaração da fonte personalizada */
         @font-face {
             font-family: 'GuardiansFont';
             src: url('fonts/sf-distant-galaxy.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
         }
 
         body {
             font-family: 'GuardiansFont', Arial, sans-serif;
-            background: linear-gradient(135deg, #6a1f94, #000000, #003366);
-            color: #fff;
             margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Gradiente animado */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, #6a1f94, #003366, #ffcc00, #000000);
+            background-size: 400% 400%;
+            animation: waveGradient 10s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes waveGradient {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 50% 50%; }
+            50% { background-position: 100% 50%; }
+            75% { background-position: 50% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         header {
@@ -36,7 +54,6 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
             gap: 10px;
         }
 
@@ -126,33 +143,43 @@
         <div class="filme">
             <div>
                 <h3>Guardiões da Galáxia (2014)</h3>
-                <p>A história segue um grupo improvável de heróis intergalácticos que se unem para salvar o universo.
-                <br><br>
-                O protagonista, Peter Quill, é um terráqueo que, após ser sequestrado quando criança, cresce como um ladrão espacial. Ele rouba uma esfera misteriosa que acaba atraindo a atenção de vários vilões, incluindo o poderosíssimo Ronan, o Acusador, que deseja usá-la para destruir planetas.
-                <br><br>
-                Para escapar da perseguição de Ronan e seus aliados, Quill forma uma aliança com quatro outros indivíduos: Gamora, uma assassina treinada e filha adotiva de Thanos; Drax, um guerreiro em busca de vingança; Rocket, um guaxinim geneticamente modificado e mestre da tecnologia; e Groot, uma árvore humanoide com um único poder de regeneração.
-                <br><br>
-                Juntos, eles formam os Guardiões da Galáxia e, apesar de suas diferenças, começam a trabalhar em equipe para impedir Ronan e salvar o universo. O filme mistura ação, humor e emoção, e também conta com uma trilha sonora nostálgica, repleta de músicas dos anos 70 e 80.</p>
+                <p>
+                    A história segue um grupo improvável de heróis intergalácticos que se unem para salvar o universo. 
+                    Peter Quill, um terráqueo sequestrado quando criança, se torna um ladrão espacial. Ao roubar uma 
+                    esfera misteriosa, ele chama a atenção de Ronan, o Acusador, que planeja usar a esfera para destruir planetas.
+                    <br><br>
+                    Quill une forças com Gamora, uma assassina e filha adotiva de Thanos; Drax, um guerreiro sedento por vingança; 
+                    Rocket, um guaxinim tecnológico; e Groot, uma árvore humanoide. Juntos, formam os Guardiões da Galáxia 
+                    e trabalham para impedir os planos de Ronan, salvando o universo.
+                </p>
             </div>
             <img src="Capa 1.jpg" alt="Guardiões da Galáxia 2014">
         </div>
         <div class="filme">
             <div>
                 <h3>Guardiões da Galáxia Vol. 2 (2017)</h3>
-                <p>Segue os heróis intergalácticos após os eventos do primeiro filme. A história explora mais profundamente os personagens e suas relações pessoais, especialmente o vínculo de Peter Quill com seu pai, Ego, que se revela ser uma entidade cósmica poderosa.
-                <br><br>
-                Ego se junta aos Guardiões, mas logo é revelado que ele tem intenções sombrias, envolvendo a destruição de planetas e a criação de uma nova ordem universal. Enquanto isso, a relação entre Rocket e Groot, Drax e Mantis, e o relacionamento crescente entre Gamora e sua irmã Nebula, que busca vingança, também são explorados.
-                <br><br>
-                Ao longo do filme, os Guardiões enfrentam traumas pessoais, batalhas cósmicas e a lealdade do grupo é posta à prova. O filme mistura ação, humor e emoção, e explora temas como paternidade, família e redenção, com uma trilha sonora que faz referência aos anos 70 e 80. No final, os Guardiões conseguem derrotar Ego e salvam o universo, enquanto reforçam os laços que os tornam uma verdadeira família.</p>
+                <p>
+                    A trama explora a relação entre Peter Quill e seu pai, Ego, uma entidade cósmica com intenções sinistras 
+                    de remodelar o universo. Enquanto isso, a equipe enfrenta conflitos internos e desafios emocionais.
+                    <br><br>
+                    Gamora e sua irmã Nebula enfrentam sua rivalidade, Rocket lida com seus traumas e Drax desenvolve um 
+                    vínculo inesperado com Mantis. O filme combina humor, ação e emoção, culminando na derrota de Ego e 
+                    no fortalecimento dos laços entre os Guardiões, que se consolidam como uma verdadeira família.
+                </p>
             </div>
             <img src="Capa 2.jpg" alt="Guardiões da Galáxia Vol. 2">
         </div>
         <div class="filme">
             <div>
                 <h3>Guardiões da Galáxia Vol. 3 (2023)</h3>
-                <p>*Guardiões da Galáxia Vol. 3* conclui a jornada dos heróis espaciais, focando na origem trágica de Rocket Raccoon, que sofreu experimentos cruéis nas mãos do Alto Evolucionário. Quando Rocket é ferido, os Guardiões se unem para salvá-lo, enfrentando o império do cientista maluco.
-                <br><br>
-                O filme explora temas de amizade, sacrifício e redenção, enquanto os personagens enfrentam seus próprios conflitos emocionais. A relação entre Peter Quill e Gamora também é aprofundada, com a versão alternativa de Gamora. A trama culmina na derrota do Alto Evolucionário, encerrando a história com uma forte carga emocional e celebração da família dos Guardiões.</p>
+                <p>
+                    A trama final da franquia foca na origem de Rocket, um guaxinim que sofreu experimentos cruéis. Quando Rocket 
+                    é gravemente ferido, a equipe embarca em uma missão para salvar seu amigo e enfrentar o Alto Evolucionário, 
+                    o cientista responsável pelos experimentos.
+                    <br><br>
+                    O filme aborda temas como amizade, sacrifício e aceitação, enquanto Peter Quill lida com a versão alternativa 
+                    de Gamora. Após derrotar o Alto Evolucionário, os Guardiões celebram sua união, encerrando a saga com emoção e esperança.
+                </p>
             </div>
             <img src="kkkk.webp" alt="Guardiões da Galáxia Vol. 3">
         </div>
