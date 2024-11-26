@@ -11,15 +11,15 @@
             src: url('fonts/sf-distant-galaxy.woff') format('woff');
         }
 
+        /* Aplicando a fonte personalizada e a transformação de texto globalmente */
         body {
             font-family: 'GuardiansFont', Arial, sans-serif;
-            /* Gradiente animado com movimento */
             background: linear-gradient(135deg, #6a1f94, #000000, #b300d9);
             background-size: 300% 300%;
             animation: gradientMove 10s ease infinite;
             color: #fff;
             margin: 0;
-            text-transform: lowercase; /* Aplica o esquema de texto com a primeira letra maiúscula em todos os textos */
+            text-transform: lowercase; /* Transforma todo o texto em minúsculas por padrão */
         }
 
         /* Animação do gradiente */
@@ -102,7 +102,6 @@
             object-fit: cover;
         }
 
-        /* Formatação do texto com primeira letra maiúscula e o restante minúsculo */
         .descricao {
             position: absolute;
             bottom: 10px;
