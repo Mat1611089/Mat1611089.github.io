@@ -7,9 +7,25 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #6a1f94, #000000, #003366);
+            /* Gradiente animado com movimento */
+            background: linear-gradient(135deg, #6a1f94, #000000, #b300d9);
+            background-size: 300% 300%;
+            animation: gradientMove 10s ease infinite;
             color: #fff;
             margin: 0;
+        }
+
+        /* Animação do gradiente */
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         header {
@@ -30,7 +46,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px; /* Espaçamento entre os botões */
+            gap: 10px;
         }
 
         nav ul li {
@@ -39,7 +55,7 @@
 
         nav ul li a {
             background-color: #ffcc00;
-            color: #800080; /* Texto roxo */
+            color: #800080;
             padding: 10px 20px;
             text-decoration: none;
             border-radius: 5px;
@@ -50,11 +66,10 @@
         }
 
         nav ul li a:hover {
-            background-color: #800080; /* Cor de fundo roxa */
-            color: #ffcc00; /* Texto amarelo */
+            background-color: #800080;
+            color: #ffcc00;
         }
 
-        /* Estilos do carrossel */
         .carousel {
             width: 80%;
             max-width: 1000px;
@@ -66,16 +81,15 @@
         .carousel-images {
             display: flex;
             transition: transform 1s ease-in-out;
-            gap: 10px; /* Espaçamento entre as imagens */
+            gap: 10px;
         }
 
         .carousel-images img {
-            width: 200px; /* Definindo a largura das imagens para 200px */
+            width: 200px;
             height: auto;
             object-fit: cover;
         }
 
-        /* Adiciona o efeito de transição suave */
         footer {
             background: rgba(0, 0, 0, 0.7);
             text-align: center;
@@ -86,61 +100,60 @@
             margin: 0;
         }
 
-        /* Tornando o layout responsivo */
         @media (max-width: 768px) {
             header h1 {
-                font-size: 2rem; /* Ajusta o tamanho da fonte para telas menores */
+                font-size: 2rem;
             }
 
             nav ul li {
-                margin-right: 10px; /* Reduz o espaçamento entre os itens de navegação */
+                margin-right: 10px;
             }
 
             nav ul {
-                gap: 8px; /* Reduz o espaço entre os botões */
+                gap: 8px;
             }
 
             nav ul li a {
-                font-size: 1rem; /* Reduz o tamanho do texto */
-                padding: 8px 16px; /* Ajusta o espaçamento interno */
+                font-size: 1rem;
+                padding: 8px 16px;
             }
 
             .carousel {
-                width: 90%; /* Ajusta a largura do carrossel em telas menores */
+                width: 90%;
             }
 
             .carousel-images img {
-                width: 150px; /* Ajusta a largura das imagens do carrossel */
+                width: 150px;
             }
         }
 
         @media (max-width: 480px) {
             header h1 {
-                font-size: 1.5rem; /* Diminui o tamanho da fonte ainda mais em telas muito pequenas */
+                font-size: 1.5rem;
             }
 
             nav ul li {
-                margin-right: 5px; /* Reduz ainda mais o espaçamento */
+                margin-right: 5px;
             }
 
             nav ul {
-                flex-direction: column; /* Empilha os botões em coluna */
-                gap: 5px; /* Reduz o espaçamento */
+                flex-direction: column;
+                gap: 5px;
             }
 
             nav ul li a {
-                font-size: 0.9rem; /* Reduz ainda mais o tamanho do texto */
-                padding: 6px 12px; /* Reduz o espaçamento interno */
-                width: 90%; /* Faz os botões ocuparem a maior parte da largura */
-                margin: 0 auto; /* Centraliza os botões */
+                font-size: 0.9rem;
+                padding: 6px 12px;
+                width: 90%;
+                margin: 0 auto;
             }
 
             .carousel {
-                width: 100%; /* O carrossel ocupa toda a largura da tela */
+                width: 100%;
             }
 
             .carousel-images img {
-                width: 120px; /* Ajusta as imagens para um tamanho adequado em telas muito pequenas */
+                width: 120px;
             }
         }
     </style>
@@ -158,22 +171,8 @@
         </nav>
     </header>
 
-    <!-- Seção do Carrossel -->
     <section class="carousel">
         <div class="carousel-images">
-            <!-- Imagens dos Guardiões da Galáxia -->
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
-            <img src="Galeria 1.jpg" alt="Groot">
-            <img src="galeria 2.jpg" alt="Rocket Raccoon">
-            <img src="galeria 3.jpg" alt="Star-Lord">
-            <img src="Fundo.jpeg" alt="Guardiões">
-            <img src="fundo 2.jpeg" alt="Guardiões">
-            <img src="fundo3.jpg" alt="Guardiões">
             <img src="Galeria 1.jpg" alt="Groot">
             <img src="galeria 2.jpg" alt="Rocket Raccoon">
             <img src="galeria 3.jpg" alt="Star-Lord">
@@ -198,16 +197,12 @@
         const carousel = document.querySelector('.carousel-images');
         const totalImages = carousel.children.length;
 
-        // Função para mover o carrossel
         function moveCarousel() {
             currentIndex = (currentIndex + 1) % totalImages;
-            carousel.style.transform = `translateX(-${currentIndex * (200 + 10)}px)`; // 200px de largura das imagens + 10px de espaçamento
+            carousel.style.transform = `translateX(-${currentIndex * (200 + 10)}px)`;
         }
 
-        // Iniciar rotação automática
-        setInterval(moveCarousel, 3000); // Muda a cada 3 segundos
+        setInterval(moveCarousel, 3000);
     </script>
-
 </body>
 </html>
-
