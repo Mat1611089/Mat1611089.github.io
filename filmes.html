@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guardiões da Galáxia - Filmes</title>
     <style>
+        /* Declaração da fonte personalizada */
+        @font-face {
+            font-family: 'GuardiansFont';
+            src: url('fonts/sf-distant-galaxy.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'GuardiansFont', Arial, sans-serif;
             background: linear-gradient(135deg, #6a1f94, #000000, #003366);
             color: #fff;
             margin: 0;
@@ -19,7 +27,6 @@
         }
 
         header h1 {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
             color: #ffcc00;
         }
 
@@ -33,10 +40,6 @@
             gap: 10px;
         }
 
-        nav ul li {
-            margin: 0;
-        }
-
         nav ul li a {
             color: #800080;
             background-color: #ffcc00;
@@ -45,7 +48,6 @@
             text-decoration: none;
             font-size: 1.2rem;
             transition: background-color 0.3s, color 0.3s;
-            display: inline-block;
         }
 
         nav ul li a:hover {
@@ -96,15 +98,6 @@
         }
 
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            nav ul li a {
-                font-size: 1rem;
-                padding: 8px 16px;
-            }
-
             .filme p {
                 width: 100%;
                 margin-bottom: 15px;
@@ -112,33 +105,6 @@
 
             .filme img {
                 width: 100%;
-                max-width: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.5rem;
-            }
-
-            nav ul li a {
-                font-size: 0.9rem;
-                padding: 6px 12px;
-            }
-
-            .filme {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .filme p {
-                width: 100%;
-                font-size: 1rem;
-            }
-
-            .filme img {
-                width: 100%;
-                max-width: 300px;
             }
         }
     </style>
