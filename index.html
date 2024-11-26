@@ -5,8 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guardiões da Galáxia</title>
     <style>
+        /* Declaração da fonte personalizada */
+        @font-face {
+            font-family: 'GuardiansFont';
+            src: url('fonts/sf-distant-galaxy.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'GuardiansFont', Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(135deg, #6a1f94, #000000, #003366);
@@ -30,8 +38,8 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            flex-wrap: wrap; /* Permite que os botões quebrem em linhas */
-            gap: 10px; /* Espaçamento entre os botões */
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         nav ul li {
@@ -46,7 +54,7 @@
             border-radius: 5px;
             font-size: 1.1rem;
             transition: background-color 0.3s, color 0.3s;
-            display: inline-block; /* Garante que o botão se comporte como bloco */
+            display: inline-block;
         }
 
         nav ul li a:hover {
@@ -77,8 +85,8 @@
         }
 
         .characters .character img {
-            width: 70%; /* Ajustado para tamanho médio */
-            max-width: 500px; /* Limita a largura máxima para tamanho médio */
+            width: 70%;
+            max-width: 500px;
             height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -98,8 +106,8 @@
         /* Media Queries para telas menores */
         @media (max-width: 768px) {
             nav ul li a {
-                font-size: 1rem; /* Reduz o tamanho da fonte nos botões */
-                padding: 8px 16px; /* Ajusta o espaçamento interno */
+                font-size: 1rem;
+                padding: 8px 16px;
             }
         }
 
@@ -109,8 +117,8 @@
             }
 
             nav ul li a {
-                font-size: 0.9rem; /* Diminui ainda mais a fonte nos botões */
-                padding: 6px 12px; /* Reduz o tamanho geral */
+                font-size: 0.9rem;
+                padding: 6px 12px;
             }
         }
     </style>
