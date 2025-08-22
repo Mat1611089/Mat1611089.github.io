@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RPG Medieval — Mini Dungeon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Spectral:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0a09; /* fundo quase preto */
+      --card:#1a1917; /* cartas */
+      --ink:#eae5d0; /* texto pergaminho */
+      --gold:#c7a44b; /* detalhes dourados */
+      --blood:#b43b3b; /* dano */
+      --leaf:#4aa36c; /* cura */
+      --muted:#b7b1a3; /* texto secundário */
+      --parch:#2a2723; /* borda/ornamento */
+      --shadow: 0 8px 30px rgba(0,0,0,.5);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(199,164,75,.08), transparent 60%),
+        radial-gradient(800px 400px at 90% 110%, rgba(179,59,59,.06), transparent 60%),
+        linear-gradient(180deg, #0d0c0a 0%, #0b0a09 100%);
+      color:var(--ink);
+      font-family:'Spectral', serif;
+      line-height:1.6;
+    }
+    header{
+      padding: clamp(18px, 2vw, 28px);
+      border-bottom:1px solid rgba(199,164,75,.2);
+      background:linear-gradient(180deg, rgba(199,164,75,.06), transparent);
+      position:sticky;top:0;backdrop-filter: blur(6px);
+      z-index: 10;
+    }
+    .max{max-width:1100px;margin:0 auto;padding:0 16px}
+    h1{font-family:'Cinzel', serif;letter-spacing:.03em;margin:0;font-size:clamp(28px,4.2vw,54px)}
+    h2{font-family:'Cinzel', serif;letter-spacing:.02em;margin:0 0 8px 0;font-size:clamp(22px,2.6vw,34px);color:var(--gold)}
+    p{margin:0 0 12px 0;color:var(--muted)}
+    .grid{display:grid;gap:16px;grid-template-columns:1fr}
+    @media(min-width:880px){.grid{grid-template-columns: 1.1fr .9fr}}.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)), var(--card);
+  border:1px solid rgba(199,164,75,.25);
+  border-radius:18px;
+  box-shadow: var(--shadow);
+  padding: clamp(16px, 2.4vw, 22px);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;inset:0;border-radius:18px;
+  padding:1px;background:
+    linear-gradient(135deg, rgba(199,164,75,.4), rgba(255,255,255,.04) 30%, rgba(179,59,59,.35) 70%, transparent 100%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;mask-composite: exclude;
+}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--ink);opacity:.9}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(199,164,75,.8)}
+
+.rules li{margin:6px 0}
+
+.hero{
+  display:grid;gap:14px;grid-template-columns:1fr;
+  align-items:center;
+}
+@media(min-width:720px){.hero{grid-template-columns: 1fr 1fr}}
+
+.orn{height:2px;background:linear-gradient(90deg, transparent, rgba(199,164,75,.45), transparent);margin:12px 0}
+
+.form{display:grid;gap:12px}
+label{font-weight:600;color:var(--ink)}
+select,input,button{
+  width:100%;
+  background:#141311;color:var(--ink);
+  border:1px solid rgba(199,164,75,.35);
+  border-radius:12px;padding:12px 14px;font-family:inherit;font-size:16px;
+  outline:none;
+}
+select:focus,input:focus,button:focus{box-shadow:0 0 0 4px rgba(199,164,75,.15)}
+button{
+  cursor:pointer;font-weight:700;letter-spacing:.02em;
+  transition:transform .05s ease, box-shadow .2s ease;
+  background:linear-gradient(180deg, rgba(199,164,75,.25), rgba(199,164,75,.1));
+}
+button:hover{transform: translateY(-1px)}
+
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center}
+.grow{flex:1}
+
+.bar{height:12px;background:#141311;border:1px solid rgba(199,164,75,.35);border-radius:999px;overflow:hidden}
+.bar>span{display:block;height:100%;background:linear-gradient(90deg, #4aa36c, #c7a44b);width:100%;transition: width 0.3s ease}
+
+.log{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:14px;background:#11100e;border:1px solid rgba(199,164,75,.25);border-radius:12px;min-height:120px;
+  padding:12px;white-space:pre-wrap;max-height:240px;overflow:auto}
+
+.tag{display:inline-block;background:#141311;border:1px solid rgba(199,164,75,.35);
+  padding:4px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
+
+footer{opacity:.8;padding:28px 16px;text-align:center;color:var(--muted)}
+ a{color:var(--gold);text-decoration:none}
+
+.stats {font-size: 12px; margin-top: 4px; color: var(--muted)}
+.attack-animation {
+  animation: attackPulse 0.3s ease;
+}
+@keyframes attackPulse {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(3px); }
+  50% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="max">
+      <h1>⛨ RPG Medieval — Mini Dungeon</h1>
+      <div class="badge"><span class="dot"></span> responsivo · 100% em HTML/CSS/JS · pronto pra brincar</div>
+    </div>
+  </header>  <main class="max" style="padding:22px 0 32px 0">
+    <section class="hero card">
+      <div>
+        <h2>O que é um RPG?</h2>
+        <p>RPG (Role-Playing Game) é um jogo onde você assume um papel em um mundo fictício. Você faz escolhas, rola o destino (dados/aleatoriedade) e evolui seu personagem.</p>
+        <div class="orn"></div>
+        <h2>Mecânicas em 30s</h2>
+        <ul class="rules">
+          <li><strong>Atributos</strong>: definem seus números base (HP, Ataque, Defesa).</li>
+          <li><strong>Classes</strong>: especializam o estilo (ex.: Guerreiro aguenta porrada, Mago dá burst, Arqueiro bate à distância).</li>
+          <li><strong>Testes/Críticos</strong>: rolagens (+ bônus) determinam acertos. Crítico = dano extra. Falha = errou, simples assim.</li>
+          <li><strong>Turnos</strong>: cada lado age na sua vez. Quem tem mais <em>Iniciativa</em> começa.</li>
+          <li><strong>Recursos</strong>: mana/energia limitam skills — aqui simplificamos pra foco em ataque básico.</li>
+        </ul>
+        <p class="tag">Dica: leia e já cai na dungeon à direita ⚔️</p>
+      </div>
+      <div class="card" style="background:#12110f">
+        <h2>Mini Dungeon — treino relâmpago</h2>
+        <p>Escolha sua <em>classe</em>, dê um nome estiloso ao seu <em>objeto de ataque</em> e lute contra um monstro aleatório. Vitória em poucos turnos.</p>
+        <div class="orn"></div>
+        <form class="form" id="setup">
+          <div class="row">
+            <div class="grow">
+              <label for="classe">Classe</label>
+              <select id="classe" required>
+                <option value="guerreiro">Guerreiro ⚔️</option>
+                <option value="mago">Mago 🔮</option>
+                <option value="arqueiro">Arqueiro 🏹</option>
+                <option value="ladino">Ladino 🗡️</option>
+              </select>
+            </div>
+            <div class="grow">
+              <label for="arma">Objeto de ataque</label>
+              <input id="arma" type="text" placeholder="ex.: Espada Solar, Cajado da Tempestade" maxlength="30" required />
+            </div>
+          </div>
+          <button type="submit">Iniciar Batalha</button>
+        </form><div id="battle" style="display:none" class="stack">
+      <div class="row" style="gap:14px">
+        <div class="card grow">
+          <strong>Você</strong>
+          <div class="bar" aria-label="HP do jogador"><span id="hpPlayer"></span></div>
+          <div id="statsPlayer" class="muted"></div>
+          <div id="detailedStatsPlayer" class="stats"></div>
+        </div>
+        <div class="card grow">
+          <strong>Inimigo</strong>
+          <div class="bar" aria-label="HP do inimigo"><span id="hpEnemy"></span></div>
+          <div id="statsEnemy" class="muted"></div>
+          <div id="detailedStatsEnemy" class="stats"></div>
+        </div>
+      </div>
+      <div class="row">
+        <button id="btnAttack" class="grow">Atacar</button>
+        <button id="btnReset" type="button">Reiniciar</button>
+      </div>
+      <div class="log" id="log" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section class="grid" style="margin-top:18px">
+  <article class="card">
+    <h2>Como adaptar pra sua campanha</h2>
+    <p>Quer deixar mais hardcore? Adicione habilidades com cooldown, efeitos (sangramento/veneno), guardas e itens consumíveis. O esqueleto abaixo já deixa tudo pronto pra evoluir.</p>
+    <ul class="rules">
+      <li>Troque o inimigo gerado em <code>randomEnemy()</code>.</li>
+      <li>Edite balanceamento em <code>CLASS_DATA</code> e <code>weaponGuess()</code>.</li>
+      <li>Substitua a aleatoriedade de <em>dados</em> por um d20 real se quiser.</li>
+    </ul>
+  </article>
+  <aside class="card">
+    <h2>Acessibilidade & Responsivo</h2>
+    <p>Componentes com rótulos, estados ao vivo no log, contraste alto e layout fluido (mobile‑first). Teste no celular: tudo se rearranja bonito.</p>
+  </aside>
+</section>
+
+  </main>  <footer>
+    Feito com ☕ e ⚔️. Divirta-se e evolua o código.
+  </footer>  <script>
+    'use strict';
+    // Garante que o JS só rode depois do DOM existir
+    window.addEventListener('DOMContentLoaded', () => {
+      // ===== Utilidades gerais
+      const $ = sel => document.querySelector(sel)
+      const $$ = sel => Array.from(document.querySelectorAll(sel))
+      const safeEl = (sel) => {
+        const el = $(sel)
+        if(!el) throw new Error('Elemento não encontrado: ' + sel)
+        return el
+      }
+      const logEl = safeEl('#log')
+      const log = msg => {
+        const time = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
+        // Prepend para mensagem mais recente vir no topo sem quebrar acessibilidade
+        const line = document.createElement('div')
+        line.innerHTML = `[${time}] ${msg}`
+        logEl.prepend(line)
+      }
+      const clamp = (n, min, max) => Math.max(min, Math.min(max, n))
+      const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min // inteiro [min,max]
+
+      // ===== Dados de classe (balance simplificado)
+      const CLASS_DATA = {
+        guerreiro: { hp: 110, atk: 14, def: 8, crit: 8, dodge: 4, desc:'frontliner resistente' },
+        mago:      { hp: 80,  atk: 20, def: 3, crit: 14, dodge: 6, desc:'vidro canhão' },
+        arqueiro:  { hp: 95,  atk: 16, def: 5, crit: 12, dodge: 8, desc:'dano à distância' },
+        ladino:    { hp: 85,  atk: 15, def: 4, crit: 18, dodge: 12, desc:'crítico e esquiva' }
+      }
+
+      // Tenta inferir bônus pela palavra da arma (bem simples e divertido)
+      function weaponGuess(name){
+        name = (name || '').toLowerCase()
+        if(/cajado|vara|orbe/.test(name)) return { bonus: 3, type:'mágico' }
+        if(/espada|lâmina|katana|sabre/.test(name)) return { bonus: 2, type:'corte' }
+        if(/machado|clava|marte|martelo/.test(name)) return { bonus: 3, type:'impacto' }
+        if(/arco|besta|flecha|virote/.test(name)) return { bonus: 2, type:'perfurante' }
+        if(/adaga|punhal|faca/.test(name)) return { bonus: 2, type:'precisão' }
+        if(/lança|tridente|alabarda|pique/.test(name)) return { bonus: 3, type:'alcance' }
+        if(/livro|grimório|runas?/.test(name)) return { bonus: 2, type:'arcano' }
+        return { bonus: 1, type:'improviso' }
+      }
+
+      function randomEnemy(){
+        const pool = [
+          { name:'Goblin', hp: 70, atk: 12, def: 4, crit: 6, dodge: 6, emoji:'👺' },
+          { name:'Lobo das Sombras', hp: 80, atk: 13, def: 3, crit: 10, dodge: 10, emoji:'🐺' },
+          { name:'Esqueleto', hp: 75, atk: 11, def: 6, crit: 5, dodge: 4, emoji:'💀' },
+          { name:'Slime Ácida', hp: 90, atk: 10, def: 2, crit: 4, dodge: 2, emoji:'🟢' }
+        ]
+        return JSON.parse(JSON.stringify(pool[r(0, pool.length-1)])) // clone raso
+      }
+
+      // ===== Referências de elementos (garantidas)
+      const els = {
+        form: safeEl('#setup'),
+        classe: safeEl('#classe'),
+        arma: safeEl('#arma'),
+        battle: safeEl('#battle'),
+        hpPlayer: safeEl('#hpPlayer'),
+        hpEnemy: safeEl('#hpEnemy'),
+        statsPlayer: safeEl('#statsPlayer'),
+        statsEnemy: safeEl('#statsEnemy'),
+        detailedStatsPlayer: safeEl('#detailedStatsPlayer'),
+        detailedStatsEnemy: safeEl('#detailedStatsEnemy'),
+        btnAttack: safeEl('#btnAttack'),
+        btnReset: safeEl('#btnReset')
+      }
+
+      // ===== Estado da batalha
+      const state = {
+        player: null,
+        enemy: null,
+        turn: 'player',
+        over: false
+      }
+
+      function setupBattle(classe, arma){
+        const c = CLASS_DATA[classe]
+        const w = weaponGuess(arma)
+        state.player = {
+          classe,
+          name: 'Herói',
+          hp: c.hp,
+          max: c.hp,
+          atk: c.atk + w.bonus,
+          def: c.def,
+          crit: c.crit,
+          dodge: c.dodge,
+          arma,
+          tipo: w.type
+        }
+        state.enemy = randomEnemy()
+        state.enemy.max = state.enemy.hp
+        state.turn = Math.random() < 0.5 ? 'player' : 'enemy'
+        state.over = false
+
+        // UI
+        els.battle.style.display = 'grid'
+        updateBars()
+        updateDetailedStats()
+        els.statsPlayer.innerHTML = `${c.desc} • arma: <em>${arma || 'improviso'}</em>`
+        els.statsEnemy.innerHTML = `${state.enemy.emoji} ${state.enemy.name}`
+        els.btnAttack.disabled = false
+        els.btnAttack.textContent = state.turn === 'player' ? 'Atacar' : 'Aguardar turno…'
+        logEl.innerHTML = ''
+        log(`Você entra na câmara escura e encara um ${state.enemy.name}. Iniciativa: ${state.turn === 'player' ? 'Você primeiro!' : 'Inimigo começa!'}`)
+        if(state.turn === 'enemy') enemyPlay()
+      }
+
+      function rollHit(attacker, defender){
+        const base = 60 // chance base de acerto
+        const dodge = defender.dodge // esquiva do alvo
+        const hitChance = clamp(base + attacker.atk - defender.def - dodge, 30, 95)
+        const roll = r(1,100)
+        const isHit = roll <= hitChance
+        const isCrit = isHit && r(1,100) <= attacker.crit
+        return { isHit, isCrit, hitChance }
+      }
+
+      function computeDamage(attacker, defender, isCrit){
+        const spread = r(-3,3)
+        let dmg = Math.max(1, attacker.atk + spread - Math.floor(defender.def/2))
+        if(isCrit) dmg = Math.floor(dmg * 1.8)
+        return dmg
+      }
+
+      function updateBars(){
+        if(!state.player || !state.enemy) return
+        const p = state.player, e = state.enemy
+        const pPct = clamp(Math.round((p.hp/p.max)*100),0,100)
+        const ePct = clamp(Math.round((e.hp/e.max)*100),0,100)
+        els.hpPlayer.style.width = pPct + '%'
+        els.hpEnemy.style.width = ePct + '%'
+        els.hpPlayer.style.background = pPct < 30 ? `linear-gradient(90deg, var(--blood), #823030)` : ''
+        els.hpEnemy.style.background = ePct < 30 ? `linear-gradient(90deg, var(--blood), #823030)` : ''
+      }
+      
+      function updateDetailedStats() {
+        if(!state.player || !state.enemy) return
+        const p = state.player, e = state.enemy
+        els.detailedStatsPlayer.innerHTML = `HP: ${p.hp}/${p.max} | ATK: ${p.atk} | DEF: ${p.def} | CRIT: ${p.crit}% | DODGE: ${p.dodge}%`
+        els.detailedStatsEnemy.innerHTML = `HP: ${e.hp}/${e.max} | ATK: ${e.atk} | DEF: ${e.def} | CRIT: ${e.crit}% | DODGE: ${e.dodge}%`
+      }
+
+      function endBattle(result){
+        state.over = true
+        els.btnAttack.disabled = true
+        const msg = result === 'win' ? '🎉 Vitória! A sala ecoa com o silêncio do inimigo derrotado.' : '💀 Derrota! Você cai e a dungeon te engole na escuridão.'
+        log(msg)
+        els.btnAttack.textContent = 'Fim'
+      }
+
+      function playerAttack(){
+        if(state.over || state.turn !== 'player') return
+        els.btnAttack.disabled = true // evita double click
+        
+        // Animação de ataque
+        els.btnAttack.classList.add('attack-animation')
+        setTimeout(() => {
+          els.btnAttack.classList.remove('attack-animation')
+        }, 300)
+        
+        const P = state.player, E = state.enemy
+        const {isHit, isCrit, hitChance} = rollHit(P, E)
+        if(!isHit){
+          log(`Você erra o golpe com ${P.arma} (chance ${hitChance}%). O ${E.name} desvia!`)
+        } else {
+          const dmg = computeDamage(P, E, isCrit)
+          E.hp = clamp(E.hp - dmg, 0, E.max)
+          log(`Você ataca com <strong>${P.arma}</strong> (${P.tipo}) e causa <span style="color:var(--blood);font-weight:700">${dmg}</span> ${isCrit?'💥 crítico!':''}`)
+        }
+        updateBars()
+        updateDetailedStats()
+        if(state.enemy.hp <= 0) return endBattle('win')
+        state.turn = 'enemy'
+        els.btnAttack.textContent = 'Aguardar turno…'
+        setTimeout(enemyPlay, 600)
+      }
+
+      function enemyPlay(){
+        if(state.over) return
+        const P = state.player, E = state.enemy
+        const {isHit, isCrit, hitChance} = rollHit(E, P)
+        if(!isHit){
+          log(`${E.emoji} <em>${E.name}</em> erra (chance ${hitChance}%). Você esquiva como um ninja!`)
+        } else {
+          const dmg = computeDamage(E, P, isCrit)
+          P.hp = clamp(P.hp - dmg, 0, P.max)
+          log(`${E.emoji} <em>${E.name}</em> atinge você e causa <span style="color:var(--blood);font-weight:700">${dmg}</span> ${isCrit?'💥 crítico!':''}`)
+        }
+        updateBars()
+        updateDetailedStats()
+        if(state.player.hp <= 0) return endBattle('lose')
+        state.turn = 'player'
+        els.btnAttack.textContent = 'Atacar'
+        els.btnAttack.disabled = false
+      }
+
+      // ===== Eventos
+      safeEl('#setup').addEventListener('submit', (e)=>{
+        e.preventDefault()
+        const classe = els.classe.value
+        const arma = (els.arma.value || 'Soco de Valor').trim()
+        setupBattle(classe, arma)
+      })
+      els.btnAttack.addEventListener('click', playerAttack)
+      els.btnReset.addEventListener('click', ()=>{
+        // reset sem recarregar a página
+        els.battle.style.display = 'none'
+        logEl.innerHTML = ''
+        els.arma.value = ''
+        els.btnAttack.disabled = false
+        Object.assign(state, { player:null, enemy:null, turn:'player', over:false })
+      })
+
+      // Extra: Enter no input arma já inicia
+      els.arma.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter'){
+          e.preventDefault();
+          safeEl('#setup').dispatchEvent(new Event('submit', {cancelable:true}))
+        }
+      })
+    })
+  </script></body>
+</html>
