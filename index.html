@@ -1,435 +1,410 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RPG Medieval — Mini Dungeon</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Spectral:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#0b0a09; /* fundo quase preto */
-      --card:#1a1917; /* cartas */
-      --ink:#eae5d0; /* texto pergaminho */
-      --gold:#c7a44b; /* detalhes dourados */
-      --blood:#b43b3b; /* dano */
-      --leaf:#4aa36c; /* cura */
-      --muted:#b7b1a3; /* texto secundário */
-      --parch:#2a2723; /* borda/ornamento */
-      --shadow: 0 8px 30px rgba(0,0,0,.5);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:
-        radial-gradient(1200px 600px at 10% -10%, rgba(199,164,75,.08), transparent 60%),
-        radial-gradient(800px 400px at 90% 110%, rgba(179,59,59,.06), transparent 60%),
-        linear-gradient(180deg, #0d0c0a 0%, #0b0a09 100%);
-      color:var(--ink);
-      font-family:'Spectral', serif;
-      line-height:1.6;
-    }
-    header{
-      padding: clamp(18px, 2vw, 28px);
-      border-bottom:1px solid rgba(199,164,75,.2);
-      background:linear-gradient(180deg, rgba(199,164,75,.06), transparent);
-      position:sticky;top:0;backdrop-filter: blur(6px);
-      z-index: 10;
-    }
-    .max{max-width:1100px;margin:0 auto;padding:0 16px}
-    h1{font-family:'Cinzel', serif;letter-spacing:.03em;margin:0;font-size:clamp(28px,4.2vw,54px)}
-    h2{font-family:'Cinzel', serif;letter-spacing:.02em;margin:0 0 8px 0;font-size:clamp(22px,2.6vw,34px);color:var(--gold)}
-    p{margin:0 0 12px 0;color:var(--muted)}
-    .grid{display:grid;gap:16px;grid-template-columns:1fr}
-    @media(min-width:880px){.grid{grid-template-columns: 1.1fr .9fr}}.card{
-  background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)), var(--card);
-  border:1px solid rgba(199,164,75,.25);
-  border-radius:18px;
-  box-shadow: var(--shadow);
-  padding: clamp(16px, 2.4vw, 22px);
-  position:relative;
-  overflow:hidden;
-}
-.card::before{
-  content:"";position:absolute;inset:0;border-radius:18px;
-  padding:1px;background:
-    linear-gradient(135deg, rgba(199,164,75,.4), rgba(255,255,255,.04) 30%, rgba(179,59,59,.35) 70%, transparent 100%);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;mask-composite: exclude;
-}
-.badge{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--ink);opacity:.9}
-.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(199,164,75,.8)}
-
-.rules li{margin:6px 0}
-
-.hero{
-  display:grid;gap:14px;grid-template-columns:1fr;
-  align-items:center;
-}
-@media(min-width:720px){.hero{grid-template-columns: 1fr 1fr}}
-
-.orn{height:2px;background:linear-gradient(90deg, transparent, rgba(199,164,75,.45), transparent);margin:12px 0}
-
-.form{display:grid;gap:12px}
-label{font-weight:600;color:var(--ink)}
-select,input,button{
-  width:100%;
-  background:#141311;color:var(--ink);
-  border:1px solid rgba(199,164,75,.35);
-  border-radius:12px;padding:12px 14px;font-family:inherit;font-size:16px;
-  outline:none;
-}
-select:focus,input:focus,button:focus{box-shadow:0 0 0 4px rgba(199,164,75,.15)}
-button{
-  cursor:pointer;font-weight:700;letter-spacing:.02em;
-  transition:transform .05s ease, box-shadow .2s ease;
-  background:linear-gradient(180deg, rgba(199,164,75,.25), rgba(199,164,75,.1));
-}
-button:hover{transform: translateY(-1px)}
-
-.stack{display:flex;flex-direction:column;gap:12px}
-.row{display:flex;gap:10px;align-items:center}
-.grow{flex:1}
-
-.bar{height:12px;background:#141311;border:1px solid rgba(199,164,75,.35);border-radius:999px;overflow:hidden}
-.bar>span{display:block;height:100%;background:linear-gradient(90deg, #4aa36c, #c7a44b);width:100%;transition: width 0.3s ease}
-
-.log{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size:14px;background:#11100e;border:1px solid rgba(199,164,75,.25);border-radius:12px;min-height:120px;
-  padding:12px;white-space:pre-wrap;max-height:240px;overflow:auto}
-
-.tag{display:inline-block;background:#141311;border:1px solid rgba(199,164,75,.35);
-  padding:4px 8px;border-radius:999px;font-size:12px;color:var(--muted)}
-
-footer{opacity:.8;padding:28px 16px;text-align:center;color:var(--muted)}
- a{color:var(--gold);text-decoration:none}
-
-.stats {font-size: 12px; margin-top: 4px; color: var(--muted)}
-.attack-animation {
-  animation: attackPulse 0.3s ease;
-}
-@keyframes attackPulse {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(3px); }
-  50% { transform: translateX(-3px); }
-  100% { transform: translateX(0); }
-}
-
-  </style>
+    <title>Guia do Mestre - Conceitos de RPG Medieval</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Spectral:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0a09;
+            --card: #1a1917;
+            --ink: #eae5d0;
+            --gold: #c7a44b;
+            --blood: #b43b3b;
+            --leaf: #4aa36c;
+            --muted: #b7b1a3;
+            --parch: #2a2723;
+            --shadow: 0 8px 30px rgba(0,0,0,.5);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: 'Spectral', serif;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(199, 164, 75, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(179, 59, 59, 0.05) 0%, transparent 20%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c7a44b' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        header {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(199,164,75,.2);
+            background: linear-gradient(180deg, rgba(199,164,75,.06), transparent);
+            position: sticky;
+            top: 0;
+            backdrop-filter: blur(6px);
+            z-index: 10;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 1rem 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            color: var(--ink);
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+        
+        .card {
+            background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00)), var(--card);
+            border: 1px solid rgba(199,164,75,.25);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(199,164,75,.4), rgba(255,255,255,.04) 30%, rgba(179,59,59,.35) 70%, transparent 100%);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .section-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--muted);
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+        }
+        
+        strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+        
+        .tip {
+            background: rgba(199, 164, 75, 0.1);
+            border-left: 4px solid var(--gold);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .warning {
+            background: rgba(179, 59, 59, 0.1);
+            border-left: 4px solid var(--blood);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+        
+        .ornament {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: var(--gold);
+            opacity: 0.7;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .nav-link {
+            color: var(--gold);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(199,164,75,.35);
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            background: rgba(199, 164, 75, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: var(--muted);
+            border-top: 1px solid rgba(199,164,75,.2);
+            margin-top: 2rem;
+        }
+        
+        .quote {
+            font-style: italic;
+            border-left: 3px solid var(--gold);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: var(--muted);
+        }
+        
+        .author {
+            text-align: right;
+            color: var(--gold);
+            font-size: 0.9rem;
+        }
+        
+        .definition {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 3px solid var(--leaf);
+        }
+        
+        .definition-title {
+            color: var(--leaf);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="max">
-      <h1>⛨ RPG Medieval — Mini Dungeon</h1>
-      <div class="badge"><span class="dot"></span> responsivo · 100% em HTML/CSS/JS · pronto pra brincar</div>
-    </div>
-  </header>  <main class="max" style="padding:22px 0 32px 0">
-    <section class="hero card">
-      <div>
-        <h2>O que é um RPG?</h2>
-        <p>RPG (Role-Playing Game) é um jogo onde você assume um papel em um mundo fictício. Você faz escolhas, rola o destino (dados/aleatoriedade) e evolui seu personagem.</p>
-        <div class="orn"></div>
-        <h2>Mecânicas em 30s</h2>
-        <ul class="rules">
-          <li><strong>Atributos</strong>: definem seus números base (HP, Ataque, Defesa).</li>
-          <li><strong>Classes</strong>: especializam o estilo (ex.: Guerreiro aguenta porrada, Mago dá burst, Arqueiro bate à distância).</li>
-          <li><strong>Testes/Críticos</strong>: rolagens (+ bônus) determinam acertos. Crítico = dano extra. Falha = errou, simples assim.</li>
-          <li><strong>Turnos</strong>: cada lado age na sua vez. Quem tem mais <em>Iniciativa</em> começa.</li>
-          <li><strong>Recursos</strong>: mana/energia limitam skills — aqui simplificamos pra foco em ataque básico.</li>
-        </ul>
-        <p class="tag">Dica: leia e já cai na dungeon à direita ⚔️</p>
-      </div>
-      <div class="card" style="background:#12110f">
-        <h2>Mini Dungeon — treino relâmpago</h2>
-        <p>Escolha sua <em>classe</em>, dê um nome estiloso ao seu <em>objeto de ataque</em> e lute contra um monstro aleatório. Vitória em poucos turnos.</p>
-        <div class="orn"></div>
-        <form class="form" id="setup">
-          <div class="row">
-            <div class="grow">
-              <label for="classe">Classe</label>
-              <select id="classe" required>
-                <option value="guerreiro">Guerreiro ⚔️</option>
-                <option value="mago">Mago 🔮</option>
-                <option value="arqueiro">Arqueiro 🏹</option>
-                <option value="ladino">Ladino 🗡️</option>
-              </select>
-            </div>
-            <div class="grow">
-              <label for="arma">Objeto de ataque</label>
-              <input id="arma" type="text" placeholder="ex.: Espada Solar, Cajado da Tempestade" maxlength="30" required />
-            </div>
-          </div>
-          <button type="submit">Iniciar Batalha</button>
-        </form><div id="battle" style="display:none" class="stack">
-      <div class="row" style="gap:14px">
-        <div class="card grow">
-          <strong>Você</strong>
-          <div class="bar" aria-label="HP do jogador"><span id="hpPlayer"></span></div>
-          <div id="statsPlayer" class="muted"></div>
-          <div id="detailedStatsPlayer" class="stats"></div>
+    <header>
+        <div class="container">
+            <h1>📜 Guia do Mestre - RPG Medieval</h1>
         </div>
-        <div class="card grow">
-          <strong>Inimigo</strong>
-          <div class="bar" aria-label="HP do inimigo"><span id="hpEnemy"></span></div>
-          <div id="statsEnemy" class="muted"></div>
-          <div id="detailedStatsEnemy" class="stats"></div>
+    </header>
+    
+    <main class="container">
+        <div class="card">
+            <h2>Introdução ao Mundo dos RPGs</h2>
+            <p>Role-Playing Games (RPGs) são experiências colaborativas onde jogadores assumem papéis de personagens em mundos imaginários. Através da narrativa, tomada de decisões e elementos de aleatoriedade, histórias únicas são criadas enquanto os personagens evoluem e enfrentam desafios.</p>
+            
+            <div class="quote">
+                "Nós não paramos de jogar porque envelhecemos, nós envelhecemos porque paramos de jogar."
+                <div class="author">- George Bernard Shaw</div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <button id="btnAttack" class="grow">Atacar</button>
-        <button id="btnReset" type="button">Reiniciar</button>
-      </div>
-      <div class="log" id="log" aria-live="polite"></div>
-    </div>
-  </div>
-</section>
-
-<section class="grid" style="margin-top:18px">
-  <article class="card">
-    <h2>Como adaptar pra sua campanha</h2>
-    <p>Quer deixar mais hardcore? Adicione habilidades com cooldown, efeitos (sangramento/veneno), guardas e itens consumíveis. O esqueleto abaixo já deixa tudo pronto pra evoluir.</p>
-    <ul class="rules">
-      <li>Troque o inimigo gerado em <code>randomEnemy()</code>.</li>
-      <li>Edite balanceamento em <code>CLASS_DATA</code> e <code>weaponGuess()</code>.</li>
-      <li>Substitua a aleatoriedade de <em>dados</em> por um d20 real se quiser.</li>
-    </ul>
-  </article>
-  <aside class="card">
-    <h2>Acessibilidade & Responsivo</h2>
-    <p>Componentes com rótulos, estados ao vivo no log, contraste alto e layout fluido (mobile‑first). Teste no celular: tudo se rearranja bonito.</p>
-  </aside>
-</section>
-
-  </main>  <footer>
-    Feito com ☕ e ⚔️. Divirta-se e evolua o código.
-  </footer>  <script>
-    'use strict';
-    // Garante que o JS só rode depois do DOM existir
-    window.addEventListener('DOMContentLoaded', () => {
-      // ===== Utilidades gerais
-      const $ = sel => document.querySelector(sel)
-      const $$ = sel => Array.from(document.querySelectorAll(sel))
-      const safeEl = (sel) => {
-        const el = $(sel)
-        if(!el) throw new Error('Elemento não encontrado: ' + sel)
-        return el
-      }
-      const logEl = safeEl('#log')
-      const log = msg => {
-        const time = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
-        // Prepend para mensagem mais recente vir no topo sem quebrar acessibilidade
-        const line = document.createElement('div')
-        line.innerHTML = `[${time}] ${msg}`
-        logEl.prepend(line)
-      }
-      const clamp = (n, min, max) => Math.max(min, Math.min(max, n))
-      const r = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min // inteiro [min,max]
-
-      // ===== Dados de classe (balance simplificado)
-      const CLASS_DATA = {
-        guerreiro: { hp: 110, atk: 14, def: 8, crit: 8, dodge: 4, desc:'frontliner resistente' },
-        mago:      { hp: 80,  atk: 20, def: 3, crit: 14, dodge: 6, desc:'vidro canhão' },
-        arqueiro:  { hp: 95,  atk: 16, def: 5, crit: 12, dodge: 8, desc:'dano à distância' },
-        ladino:    { hp: 85,  atk: 15, def: 4, crit: 18, dodge: 12, desc:'crítico e esquiva' }
-      }
-
-      // Tenta inferir bônus pela palavra da arma (bem simples e divertido)
-      function weaponGuess(name){
-        name = (name || '').toLowerCase()
-        if(/cajado|vara|orbe/.test(name)) return { bonus: 3, type:'mágico' }
-        if(/espada|lâmina|katana|sabre/.test(name)) return { bonus: 2, type:'corte' }
-        if(/machado|clava|marte|martelo/.test(name)) return { bonus: 3, type:'impacto' }
-        if(/arco|besta|flecha|virote/.test(name)) return { bonus: 2, type:'perfurante' }
-        if(/adaga|punhal|faca/.test(name)) return { bonus: 2, type:'precisão' }
-        if(/lança|tridente|alabarda|pique/.test(name)) return { bonus: 3, type:'alcance' }
-        if(/livro|grimório|runas?/.test(name)) return { bonus: 2, type:'arcano' }
-        return { bonus: 1, type:'improviso' }
-      }
-
-      function randomEnemy(){
-        const pool = [
-          { name:'Goblin', hp: 70, atk: 12, def: 4, crit: 6, dodge: 6, emoji:'👺' },
-          { name:'Lobo das Sombras', hp: 80, atk: 13, def: 3, crit: 10, dodge: 10, emoji:'🐺' },
-          { name:'Esqueleto', hp: 75, atk: 11, def: 6, crit: 5, dodge: 4, emoji:'💀' },
-          { name:'Slime Ácida', hp: 90, atk: 10, def: 2, crit: 4, dodge: 2, emoji:'🟢' }
-        ]
-        return JSON.parse(JSON.stringify(pool[r(0, pool.length-1)])) // clone raso
-      }
-
-      // ===== Referências de elementos (garantidas)
-      const els = {
-        form: safeEl('#setup'),
-        classe: safeEl('#classe'),
-        arma: safeEl('#arma'),
-        battle: safeEl('#battle'),
-        hpPlayer: safeEl('#hpPlayer'),
-        hpEnemy: safeEl('#hpEnemy'),
-        statsPlayer: safeEl('#statsPlayer'),
-        statsEnemy: safeEl('#statsEnemy'),
-        detailedStatsPlayer: safeEl('#detailedStatsPlayer'),
-        detailedStatsEnemy: safeEl('#detailedStatsEnemy'),
-        btnAttack: safeEl('#btnAttack'),
-        btnReset: safeEl('#btnReset')
-      }
-
-      // ===== Estado da batalha
-      const state = {
-        player: null,
-        enemy: null,
-        turn: 'player',
-        over: false
-      }
-
-      function setupBattle(classe, arma){
-        const c = CLASS_DATA[classe]
-        const w = weaponGuess(arma)
-        state.player = {
-          classe,
-          name: 'Herói',
-          hp: c.hp,
-          max: c.hp,
-          atk: c.atk + w.bonus,
-          def: c.def,
-          crit: c.crit,
-          dodge: c.dodge,
-          arma,
-          tipo: w.type
-        }
-        state.enemy = randomEnemy()
-        state.enemy.max = state.enemy.hp
-        state.turn = Math.random() < 0.5 ? 'player' : 'enemy'
-        state.over = false
-
-        // UI
-        els.battle.style.display = 'grid'
-        updateBars()
-        updateDetailedStats()
-        els.statsPlayer.innerHTML = `${c.desc} • arma: <em>${arma || 'improviso'}</em>`
-        els.statsEnemy.innerHTML = `${state.enemy.emoji} ${state.enemy.name}`
-        els.btnAttack.disabled = false
-        els.btnAttack.textContent = state.turn === 'player' ? 'Atacar' : 'Aguardar turno…'
-        logEl.innerHTML = ''
-        log(`Você entra na câmara escura e encara um ${state.enemy.name}. Iniciativa: ${state.turn === 'player' ? 'Você primeiro!' : 'Inimigo começa!'}`)
-        if(state.turn === 'enemy') enemyPlay()
-      }
-
-      function rollHit(attacker, defender){
-        const base = 60 // chance base de acerto
-        const dodge = defender.dodge // esquiva do alvo
-        const hitChance = clamp(base + attacker.atk - defender.def - dodge, 30, 95)
-        const roll = r(1,100)
-        const isHit = roll <= hitChance
-        const isCrit = isHit && r(1,100) <= attacker.crit
-        return { isHit, isCrit, hitChance }
-      }
-
-      function computeDamage(attacker, defender, isCrit){
-        const spread = r(-3,3)
-        let dmg = Math.max(1, attacker.atk + spread - Math.floor(defender.def/2))
-        if(isCrit) dmg = Math.floor(dmg * 1.8)
-        return dmg
-      }
-
-      function updateBars(){
-        if(!state.player || !state.enemy) return
-        const p = state.player, e = state.enemy
-        const pPct = clamp(Math.round((p.hp/p.max)*100),0,100)
-        const ePct = clamp(Math.round((e.hp/e.max)*100),0,100)
-        els.hpPlayer.style.width = pPct + '%'
-        els.hpEnemy.style.width = ePct + '%'
-        els.hpPlayer.style.background = pPct < 30 ? `linear-gradient(90deg, var(--blood), #823030)` : ''
-        els.hpEnemy.style.background = ePct < 30 ? `linear-gradient(90deg, var(--blood), #823030)` : ''
-      }
-      
-      function updateDetailedStats() {
-        if(!state.player || !state.enemy) return
-        const p = state.player, e = state.enemy
-        els.detailedStatsPlayer.innerHTML = `HP: ${p.hp}/${p.max} | ATK: ${p.atk} | DEF: ${p.def} | CRIT: ${p.crit}% | DODGE: ${p.dodge}%`
-        els.detailedStatsEnemy.innerHTML = `HP: ${e.hp}/${e.max} | ATK: ${e.atk} | DEF: ${e.def} | CRIT: ${e.crit}% | DODGE: ${e.dodge}%`
-      }
-
-      function endBattle(result){
-        state.over = true
-        els.btnAttack.disabled = true
-        const msg = result === 'win' ? '🎉 Vitória! A sala ecoa com o silêncio do inimigo derrotado.' : '💀 Derrota! Você cai e a dungeon te engole na escuridão.'
-        log(msg)
-        els.btnAttack.textContent = 'Fim'
-      }
-
-      function playerAttack(){
-        if(state.over || state.turn !== 'player') return
-        els.btnAttack.disabled = true // evita double click
         
-        // Animação de ataque
-        els.btnAttack.classList.add('attack-animation')
-        setTimeout(() => {
-          els.btnAttack.classList.remove('attack-animation')
-        }, 300)
+        <div class="grid">
+            <div class="card">
+                <div class="section-icon">⚔️</div>
+                <h2>Conceitos Fundamentais</h2>
+                
+                <div class="definition">
+                    <div class="definition-title">Personagem</div>
+                    <p>A representação do jogador no mundo do jogo, com habilidades, histórico e personalidade únicos.</p>
+                </div>
+                
+                <div class="definition">
+                    <div class="definition-title">Mestre do Jogo (Game Master)</div>
+                    <p>O narrador e árbitro que guia a história, interpreta personagens não-jogadores e define os desafios.</p>
+                </div>
+                
+                <div class="definition">
+                    <div class="definition-title">Sistema de Regras</div>
+                    <p>O conjunto de mecânicas que determina como as ações são resolvidas e como o mundo funciona.</p>
+                </div>
+                
+                <div class="definition">
+                    <div class="definition-title">Campanha</div>
+                    <p>Uma série de aventuras interligadas que formam uma narrativa maior com começo, meio e fim.</p>
+                </div>
+                
+                <h3>Elementos Essenciais</h3>
+                <ul>
+                    <li><strong>Interpretação de Papéis</strong>: Agir e pensar como seu personagem</li>
+                    <li><strong>Narrativa Compartilhada</strong>: Todos contribuem para a história</li>
+                    <li><strong>Resolução de Desafios</strong>: Superar obstáculos usando habilidades</li>
+                    <li><strong>Progressão</strong>: Desenvolver o personagem ao longo do tempo</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="section-icon">🎲</div>
+                <h2>Mecânicas de Jogo</h2>
+                
+                <h3>Sistemas de Dados</h3>
+                <p>Os dados determinam o sucesso ou fracasso das ações. Os sistemas mais comuns:</p>
+                <ul>
+                    <li><strong>d20</strong>: Dado de 20 faces usado como base em muitos sistemas</li>
+                    <li><strong>Dados Poliédricos</strong>: Conjunto que inclui d4, d6, d8, d10, d12 e d20</li>
+                    <li><strong>Sistema d100</strong>: Usado para testes de porcentagem</li>
+                    <li><strong>Dados de Pool</strong>: Múltiplos dados do mesmo tipo (como em Storytelling)</li>
+                </ul>
+                
+                <h3>Atributos e Habilidades</h3>
+                <p>Personagens são definidos por características que determinam suas capacidades:</p>
+                <ul>
+                    <li><strong>Atributos Primários</strong>: Força, Destreza, Constituição, Inteligência, Sabedoria, Carisma</li>
+                    <li><strong>Perícias</strong>: Habilidades específicas como Furtividade, Diplomacia ou Conhecimento</li>
+                    <li><strong>Talentos/Vantagens</strong>: Habilidades especiais que diferenciam os personagens</li>
+                </ul>
+                
+                <h3>Combate e Conflito</h3>
+                <p>Sistemas para resolver situações de enfrentamento:</p>
+                <ul>
+                    <li><strong>Turnos e Iniciativa</strong>: Ordem de ação dos participantes</li>
+                    <li><strong>Classes de Armadura</strong>: Dificuldade para ser acertado</li>
+                    <li><strong>Pontos de Vida</strong>: Medem a resistência a dano</li>
+                    <li><strong>Ataques e Dano</strong>: Diferentes tipos e formas de causar ferimentos</li>
+                </ul>
+            </div>
+        </div>
         
-        const P = state.player, E = state.enemy
-        const {isHit, isCrit, hitChance} = rollHit(P, E)
-        if(!isHit){
-          log(`Você erra o golpe com ${P.arma} (chance ${hitChance}%). O ${E.name} desvia!`)
-        } else {
-          const dmg = computeDamage(P, E, isCrit)
-          E.hp = clamp(E.hp - dmg, 0, E.max)
-          log(`Você ataca com <strong>${P.arma}</strong> (${P.tipo}) e causa <span style="color:var(--blood);font-weight:700">${dmg}</span> ${isCrit?'💥 crítico!':''}`)
-        }
-        updateBars()
-        updateDetailedStats()
-        if(state.enemy.hp <= 0) return endBattle('win')
-        state.turn = 'enemy'
-        els.btnAttack.textContent = 'Aguardar turno…'
-        setTimeout(enemyPlay, 600)
-      }
-
-      function enemyPlay(){
-        if(state.over) return
-        const P = state.player, E = state.enemy
-        const {isHit, isCrit, hitChance} = rollHit(E, P)
-        if(!isHit){
-          log(`${E.emoji} <em>${E.name}</em> erra (chance ${hitChance}%). Você esquiva como um ninja!`)
-        } else {
-          const dmg = computeDamage(E, P, isCrit)
-          P.hp = clamp(P.hp - dmg, 0, P.max)
-          log(`${E.emoji} <em>${E.name}</em> atinge você e causa <span style="color:var(--blood);font-weight:700">${dmg}</span> ${isCrit?'💥 crítico!':''}`)
-        }
-        updateBars()
-        updateDetailedStats()
-        if(state.player.hp <= 0) return endBattle('lose')
-        state.turn = 'player'
-        els.btnAttack.textContent = 'Atacar'
-        els.btnAttack.disabled = false
-      }
-
-      // ===== Eventos
-      safeEl('#setup').addEventListener('submit', (e)=>{
-        e.preventDefault()
-        const classe = els.classe.value
-        const arma = (els.arma.value || 'Soco de Valor').trim()
-        setupBattle(classe, arma)
-      })
-      els.btnAttack.addEventListener('click', playerAttack)
-      els.btnReset.addEventListener('click', ()=>{
-        // reset sem recarregar a página
-        els.battle.style.display = 'none'
-        logEl.innerHTML = ''
-        els.arma.value = ''
-        els.btnAttack.disabled = false
-        Object.assign(state, { player:null, enemy:null, turn:'player', over:false })
-      })
-
-      // Extra: Enter no input arma já inicia
-      els.arma.addEventListener('keydown', (e)=>{
-        if(e.key==='Enter'){
-          e.preventDefault();
-          safeEl('#setup').dispatchEvent(new Event('submit', {cancelable:true}))
-        }
-      })
-    })
-  </script></body>
+        <div class="card">
+            <div class="section-icon">🌟</div>
+            <h2>Dicas para um RPG Memorável</h2>
+            
+            <div class="tip">
+                <h3>Para Jogadores</h3>
+                <ul>
+                    <li><strong>Conheça seu personagem</strong>: Crie um histórico e personalidade consistentes</li>
+                    <li><strong>Colabore, não compita</strong>: RPG é uma experiência cooperativa</li>
+                    <li><strong>Esteja presente</strong>: Participe ativamente da narrativa</li>
+                    <li><strong>Respeite o tempo de todos</strong>: Deixe espaço para outros jogadores brilharem</li>
+                    <li><strong>Abrace o fracasso</strong>: As falhas podem criar as melhores histórias</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <h3>Para Mestres</h3>
+                <ul>
+                    <li><strong>Prepare-se, mas seja flexível</strong>: Jogadores sempre surpreendem</li>
+                    <li><strong>Descreva, não apenas conte</strong>: Use todos os sentidos na narrativa</li>
+                    <li><strong>Conheça seu grupo</strong>: Adapte a campanha aos interesses dos jogadores</li>
+                    <li><strong>Mantenha o ritmo</strong>: Equilibre narrativa, exploração e combate</li>
+                    <li><strong>Divirta-se</strong>: Se você está se divertindo, seus jogadores também estarão</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <h3>Erros Comuns a Evitar</h3>
+                <ul>
+                    <li>Minimizar a agência dos jogadores com narrativas muito rígidas</li>
+                    <li>Focar excessivamente em regras em detrimento da diversão</li>
+                    <li>Criar personagens que ofuscam completamente os jogadores</li>
+                    <li>Permitir que um jogador domine toda a sessão</li>
+                    <li>Ignorar o background e interesses dos personagens dos jogadores</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <div class="section-icon">📖</div>
+                <h2>Narrativa e Mundo</h2>
+                
+                <h3>Criando Mundos Cativos</h3>
+                <ul>
+                    <li><strong>Consistência Interna</strong>: As regras do mundo devem fazer sentido dentro dele</li>
+                    <li><strong>História e Cultura</strong>: Desenvolva nações, povos e suas relações</li>
+                    <li><strong>Geografia Significativa</strong>: Lugares devem ter história e propósito</li>
+                    <li><strong>Conflitos Interessantes</strong>: Tensões políticas, religiosas e sociais</li>
+                </ul>
+                
+                <h3>Arcos Narrativos</h3>
+                <p>Estruturas para campanhas envolventes:</p>
+                <ul>
+                    <li><strong>Jornada do Herói</strong>: Clássica estrutura de partida, iniciação e retorno</li>
+                    <li><strong>Arco de Personagem</strong>: Foco no desenvolvimento pessoal</li>
+                    <li><strong>Mistério Investigativo</strong>: Revelação gradual de informações</li>
+                    <li><strong>Sandbox</strong>: Mundo aberto com múltiplas possibilidades</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <div class="section-icon">🛡️</div>
+                <h2>Recursos Recomendados</h2>
+                
+                <h3>Para Iniciantes</h3>
+                <ul>
+                    <li><strong>D&D 5ª Edição</strong>: Acesso fácil, comunidade vasta</li>
+                    <li><strong>Pathfinder Beginner Box</strong>: Introdução bem estruturada</li>
+                    <li><strong>RPGs one-shot</strong>: Sessões únicas para experimentar</li>
+                </ul>
+                
+                <h3>Ferramentas Úteis</h3>
+                <ul>
+                    <li><strong>Roll20</strong>: Plataforma virtual para jogos online</li>
+                    <li><strong>D&D Beyond</strong>: Gerenciador de personagens e regras</li>
+                    <li><strong>Notion ou World Anvil</strong>: Para organização de campanhas</li>
+                    <li><strong>Playlists temáticas</strong>: Música para ambientação</li>
+                </ul>
+                
+                <h3>Comunidades</h3>
+                <ul>
+                    <li>Fóruns especializados (RPG Planet, Reddit)</li>
+                    <li>Grupos em redes sociais</li>
+                    <li>Convenções de RPG e jogos</li>
+                    <li>Lojas especializadas com espaços para jogar</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="ornament">⚔️ 🛡️ ✨ 📜 🎲</div>
+        
+        <div class="nav-links">
+            <a href="dungeon1.html" class="nav-link">Selecionar Classe e Jogar</a>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Feito com ☕ e ⚔️. Que seus dados sempre rolem críticos!</p>
+    </footer>
+</body>
 </html>
