@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Mini RPG - Reino Sombrio: Dungeon 1</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1b1b2f;
+    color: #dcdcdc;
+    text-align: center;
+    padding: 20px;
+    user-select: none;
+  }
+  button {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    margin: 10px;
+    cursor: pointer;
+    background: #4a4e69;
+    color: #f2e9e4;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #222;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #9a8c98;
+  }
+  #log {
+    background: #22223b;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 25px;
+    height: 250px;
+    overflow-y: auto;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: inset 0 0 10px #3f3a56;
+  }
+  .status {
+    margin: 15px 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 2px #000;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #e0def4;
+    text-shadow: 2px 2px 6px #2b2a4a;
+    margin-bottom: 5px;
+  }
+  p.subtitle {
+    font-style: italic;
+    color: #9a8c98;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  #classSelect, #weaponSelect, #gameArea, #choiceArea {
+    margin-top: 20px;
+  }
+  #weaponSelect, #gameArea, #choiceArea {
+    display: none;
+  }
+  label {
+    margin-right: 10px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<h1>🛡️ Reino Sombrio: Dungeon 1 🗡️</h1>
+<p class="subtitle">Escolha sua classe e arma, e prepare-se para o desafio!</p>
+
+<div id="classSelect">
+  <p><b>Escolha sua classe:</b></p>
+  <button data-class="guerreiro">Guerreiro (35 HP, Escudo 1)</button>
+  <button data-class="arqueiro">Arqueiro (25 HP, Sem escudo)</button>
+  <button data-class="mago">Mago (20 HP, Sem escudo)</button>
+  <button data-class="ladino">Ladino (28 HP, Sem escudo)</button>
+</div>
+
+<div id="weaponSelect">
+  <p><b>Escolha sua arma:</b></p>
+  <div id="weaponButtons"></div>
+</div>
+
+<div id="gameArea">
+  <div class="status">Sua Vida: <span id="playerHp"></span> HP</div>
+  <div class="status">Vida do Inimigo: <span id="enemyHp"></span> HP</div>
+  <button id="rollBtn">Lançar D20</button>
+  <div id="log"></div>
+</div>
+
+<div id="choiceArea">
+  <p><b>Você venceu a primeira dungeon! Escolha sua recompensa antes da próxima batalha:</b></p>
+  <button id="recoverBtn">Recuperar vida total</button>
+  <button id="shieldBtn">Adicionar +1 Escudo</button>
+</div>
+
+<script>
+  const classes = {
+    guerreiro: { hp: 35, shield: 1, weapons: [{name:'Espada', dice:6},{name:'Machado', dice:8}] },
+    arqueiro: { hp: 25, shield: 0, weapons: [{name:'Arco', dice:6},{name:'Besta', dice:8}] },
+    mago: { hp: 20, shield: 0, weapons: [{name:'Cajado', dice:6},{name:'Orbe', dice:8}] },
+    ladino: { hp: 28, shield: 0, weapons: [{name:'Adaga', dice:6},{name:'Espada Curta', dice:8}] },
+  };
+
+  let playerClass = null;
+  let playerWeapon = null;
+  let playerMaxHp = 0;
+  let playerHp = 0;
+  let playerShield = 0;
+
+  let enemyHp = 20;
+
+  const classButtons = document.querySelectorAll('#classSelect button');
+  const weaponSelectDiv = document.getElementById('weaponSelect');
+  const weaponButtonsDiv = document.getElementById('weaponButtons');
+  const gameArea = document.getElementById('gameArea');
+  const playerHpSpan = document.getElementById('playerHp');
+  const enemyHpSpan = document.getElementById('enemyHp');
+  const rollBtn = document.getElementById('rollBtn');
+  const log = document.getElementById('log');
+
+  const choiceArea = document.getElementById('choiceArea');
+  const recoverBtn = document.getElementById('recoverBtn');
+  const shieldBtn = document.getElementById('shieldBtn');
+
+  function rolarD20() {
+    return Math.floor(Math.random() * 20) + 1;
+  }
+
+  function rolarD(dados) {
+    return Math.floor(Math.random() * dados) + 1;
+  }
+
+  function atualizarStatus() {
+    playerHpSpan.textContent = playerHp;
+    enemyHpSpan.textContent = enemyHp;
+  }
+
+  function logMsg(msg) {
+    log.innerHTML += `<p>${msg}</p>`;
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function startGame() {
+    playerMaxHp = classes[playerClass].hp;
+    playerHp = playerMaxHp;
+    playerShield = classes[playerClass].shield;
+    enemyHp = 20;
+    atualizarStatus();
+    log.innerHTML = `<p><i>Você adentra as frias catacumbas do Castelo Brenndorf como um bravo ${playerClass} empunhando sua ${playerWeapon.name}.</i>  
+                     <br>Prepare-se para a batalha contra o mal que assola o reino.</p>`;
+    gameArea.style.display = 'block';
+  }
+
+  classButtons.forEach(btn => {
+    btn.onclick = () => {
+      playerClass = btn.getAttribute('data-class');
+      weaponButtonsDiv.innerHTML = '';
+      classes[playerClass].weapons.forEach(w => {
+        const wBtn = document.createElement('button');
+        wBtn.textContent = `${w.name} (1d${w.dice})`;
+        wBtn.onclick = () => {
+          playerWeapon = w;
+          weaponSelectDiv.style.display = 'none';
+          document.getElementById('classSelect').style.display = 'none';
+          startGame();
+        };
+        weaponButtonsDiv.appendChild(wBtn);
+      });
+      weaponSelectDiv.style.display = 'block';
+    };
+  });
+
+  rollBtn.onclick = () => {
+    if (playerHp <= 0 || enemyHp <= 0) {
+      // Reset game to class selection
+      log.innerHTML = '';
+      gameArea.style.display = 'none';
+      document.getElementById('classSelect').style.display = 'block';
+      weaponSelectDiv.style.display = 'none';
+      return;
+    }
+
+    const playerRoll = rolarD20();
+    const enemyRoll = rolarD20();
+    const playerDamage = rolarD(playerWeapon.dice);
+
+    logMsg(`🗡️ Você rola o dado: <b>${playerRoll}</b>`);
+    logMsg(`👹 O inimigo rola o dado: <b>${enemyRoll}</b>`);
+
+    if (playerRoll < 10) {
+      logMsg('<span style="color:#e63946">Seu ataque falha...</span>');
+      if (enemyRoll > playerRoll) {
+        const enemyDamage = 5;
+        let damageTaken = enemyDamage - playerShield;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken;
+        playerHp -= damageTaken;
+        logMsg(`<span style="color:#f1faee">Inimigo contra-ataca e causa ${damageTaken} de dano (Escudo bloqueou ${playerShield}).</span>`);
+      } else {
+        logMsg('O inimigo hesita e não consegue contra-atacar.');
+      }
+    } else {
+      if (enemyRoll > playerRoll) {
+        logMsg('<span style="color:#e9c46a">O inimigo desvia do seu ataque!</span>');
+        const enemyDamage = 3;
+        let damageTaken = enemyDamage - playerShield;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken;
+        playerHp -= damageTaken;
+        logMsg(`<span style="color:#f4a261">Mas ele contra-ataca causando ${damageTaken} de dano.</span>`);
+      } else {
+        enemyHp -= playerDamage;
+        logMsg(`<span style="color:#a8dadc">Você acerta e causa <b>${playerDamage}</b> de dano ao inimigo!</span>`);
+      }
+    }
+
+    atualizarStatus();
+
+    if (playerHp <= 0) {
+      logMsg('<b style="color:#e63946">Você caiu nas trevas... O reino lamenta sua queda. Clique para recomeçar.</b>');
+    } else if (enemyHp <= 0) {
+      logMsg('<b style="color:#2a9d8f">Inimigo derrotado! Você vence a primeira dungeon!</b>');
+      rollBtn.style.display = 'none';
+      choiceArea.style.display = 'block';
+    }
+  };
+
+  // Escolha após primeira dungeon
+  recoverBtn.onclick = () => {
+    playerHp = playerMaxHp;
+    salvarEstado();
+    window.location.href = "dungeon2.html";
+  };
+
+  shieldBtn.onclick = () => {
+    playerShield += 1;
+    salvarEstado();
+    window.location.href = "dungeon2.html";
+  };
+
+  function salvarEstado() {
+    const estado = {
+      playerClass,
+      playerWeapon,
+      playerHp,
+      playerMaxHp,
+      playerShield,
+    };
+    localStorage.setItem('rpgEstado', JSON.stringify(estado));
+  }
+</script>
+</body>
+</html>

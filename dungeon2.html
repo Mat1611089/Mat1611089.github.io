@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Mini RPG - Reino Sombrio: Dungeon 2</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1b1b2f;
+    color: #dcdcdc;
+    text-align: center;
+    padding: 20px;
+    user-select: none;
+  }
+  button {
+    padding: 12px 24px;
+    font-size: 1.2rem;
+    margin: 10px;
+    cursor: pointer;
+    background: #4a4e69;
+    color: #f2e9e4;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #222;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #9a8c98;
+  }
+  #log2 {
+    background: #22223b;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 25px;
+    height: 250px;
+    overflow-y: auto;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: inset 0 0 10px #3f3a56;
+  }
+  .status {
+    margin: 15px 0;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+    text-shadow: 1px 1px 2px #000;
+  }
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 2.8rem;
+    color: #e0def4;
+    text-shadow: 2px 2px 6px #2b2a4a;
+    margin-bottom: 5px;
+  }
+  p.subtitle {
+    font-style: italic;
+    color: #9a8c98;
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+  stop.status{
+      padding: 12px 24px;
+    font-size: 1.2rem;
+    margin: 10px;
+    cursor: pointer;
+    background: #4a4e69;
+    color: #f2e9e4;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #222;
+    transition: background 0.3s ease;
+  }
+</style>
+</head>
+<body>
+<h1>🛡️ Reino Sombrio: Dungeon 2 🗡️</h1>
+<p class="subtitle">A Cripta Profunda aguarda. Prepare-se para o desafio final!</p>
+
+<div class="status">Sua Vida: <span id="playerHp2"></span> HP</div>
+<div class="status">Seu Escudo: <span id="playerShield2"></span></div>
+<div class="status">Vida do Inimigo: <span id="enemyHp2"></span> HP</div>
+<button><a href="index.html" class="rollBtn2">Reiniciar</a></button>
+<button id="rollBtn2">Lançar D20</button>
+<div id="log2"></div>
+
+<script>
+  let playerClass2, playerWeapon2, playerHp2, playerMaxHp2, playerShield2, enemyHp2;
+
+  function rolarD20() {
+    return Math.floor(Math.random() * 20) + 1;
+  }
+
+  function rolarD(dados) {
+    return Math.floor(Math.random() * dados) + 1;
+  }
+
+  const playerHpSpan = document.getElementById('playerHp2');
+  const playerShieldSpan = document.getElementById('playerShield2');
+  const enemyHpSpan = document.getElementById('enemyHp2');
+  const log2 = document.getElementById('log2');
+  const rollBtn2 = document.getElementById('rollBtn2');
+
+  function atualizarStatus() {
+    playerHpSpan.textContent = playerHp2;
+    playerShieldSpan.textContent = playerShield2;
+    enemyHpSpan.textContent = enemyHp2;
+  }
+
+  function logMsg(msg) {
+    log2.innerHTML += `<p>${msg}</p>`;
+    log2.scrollTop = log2.scrollHeight;
+  }
+
+  function carregarEstado() {
+    const estadoStr = localStorage.getItem('rpgEstado');
+    if (!estadoStr) {
+      alert('Sem dados da primeira dungeon! Volte para iniciar.');
+      window.location.href = 'dungeon1.html';
+      return;
+    }
+    const estado = JSON.parse(estadoStr);
+    playerClass2 = estado.playerClass;
+    playerWeapon2 = estado.playerWeapon;
+    playerHp2 = estado.playerHp;
+    playerMaxHp2 = estado.playerMaxHp;
+    playerShield2 = estado.playerShield;
+    enemyHp2 = 25;
+  }
+
+  carregarEstado();
+  atualizarStatus();
+  logMsg(`<i>Você entra na Cripta Profunda como um ${playerClass2} armado com sua ${playerWeapon2.name}.</i>`);
+
+  rollBtn2.onclick = () => {
+    if (playerHp2 <= 0 || enemyHp2 <= 0) {
+      log2.innerHTML = '';
+      rollBtn2.style.display = 'none';
+      logMsg('<b>Jogo terminado. Recarregue para jogar de novo.</b>');
+      return;
+    }
+
+    const playerRoll = rolarD20();
+    const enemyRoll = rolarD20();
+    const playerDamage = rolarD(playerWeapon2.dice);
+
+    logMsg(`🗡️ Você rola o dado: <b>${playerRoll}</b>`);
+    logMsg(`👹 O inimigo rola o dado: <b>${enemyRoll}</b>`);
+
+    if (playerRoll < 10) {
+      logMsg('<span style="color:#e63946">Seu ataque falha...</span>');
+      if (enemyRoll > playerRoll) {
+        const enemyDamage = 6;
+        let damageTaken = enemyDamage - playerShield2;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken;
+        playerHp2 -= damageTaken;
+        logMsg(`<span style="color:#f1faee">Inimigo contra-ataca e causa ${damageTaken} de dano (Escudo bloqueou ${playerShield2}).</span>`);
+      } else {
+        logMsg('O inimigo hesita e não consegue contra-atacar.');
+      }
+    } else {
+      if (enemyRoll > playerRoll) {
+        logMsg('<span style="color:#e9c46a">O inimigo desvia do seu ataque!</span>');
+        const enemyDamage = 4;
+        let damageTaken = enemyDamage - playerShield2;
+        damageTaken = damageTaken < 0 ? 0 : damageTaken;
+        playerHp2 -= damageTaken;
+        logMsg(`<span style="color:#f4a261">Mas ele contra-ataca causando ${damageTaken} de dano.</span>`);
+      } else {
+        enemyHp2 -= playerDamage;
+        logMsg(`<span style="color:#a8dadc">Você acerta e causa <b>${playerDamage}</b> de dano ao inimigo!</span>`);
+      }
+    }
+
+    atualizarStatus();
+
+    if (playerHp2 <= 0) {
+      logMsg('<b style="color:#e63946">Você foi derrotado na Cripta Profunda... Recarregue para tentar novamente.</b>');
+      rollBtn2.style.display = 'none';
+    } else if (enemyHp2 <= 0) {
+      logMsg('<b style="color:#2a9d8f">Você limpou a Cripta Profunda e venceu o desafio final! Parabéns!</b>');
+      rollBtn2.style.display = 'none';
+    }
+  };
+</script>
+</body>
+</html>
